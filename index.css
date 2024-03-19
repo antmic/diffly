@@ -1,0 +1,166 @@
+@charset "UTF-8";
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+  body .output {
+    margin: 20px; }
+    body .output .guess-word {
+      margin-bottom: 20px;
+      display: flex; }
+      body .output .guess-word .letter {
+        font-size: 30px;
+        font-weight: 500;
+        padding: 5px;
+        border: 1px solid #000000;
+        border-radius: 50%;
+        margin: 5px;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        background-color: #cccccc; }
+        body .output .guess-word .letter.used {
+          background-color: #ffff00; }
+        body .output .guess-word .letter.first {
+          border-radius: 0 50% 50% 0; }
+        body .output .guess-word .letter.last {
+          border-radius: 50% 0 0 50%; }
+        body .output .guess-word .letter.correct-order {
+          background-color: #00ff00; }
+        body .output .guess-word .letter.middle-in-sequence {
+          margin: 5px 0;
+          border-radius: 0; }
+        body .output .guess-word .letter.first-in-sequence {
+          margin: 5px 0 5px 5px;
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0; }
+        body .output .guess-word .letter.last-in-sequence {
+          margin: 5px 5px 5px 0;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0; }
+  body .keyboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    body .keyboard .keyboard-latin,
+    body .keyboard .keyboard-polish {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; }
+      body .keyboard .keyboard-latin.qwerty,
+      body .keyboard .keyboard-polish.qwerty {
+        display: grid;
+        grid-template-areas: 'q q w w e e r r t t y y u u i i o o p p' '. a a s s d d f f g g h h j j k k l l .' '. . z z x x c c v v b b n n m m § § § §';
+        grid-template-columns: repeat(20, 1fr);
+        grid-template-rows: repeat(3, 1fr); }
+        body .keyboard .keyboard-latin.qwerty #q-btn,
+        body .keyboard .keyboard-polish.qwerty #q-btn {
+          grid-area: q; }
+        body .keyboard .keyboard-latin.qwerty #w-btn,
+        body .keyboard .keyboard-polish.qwerty #w-btn {
+          grid-area: w; }
+        body .keyboard .keyboard-latin.qwerty #e-btn,
+        body .keyboard .keyboard-polish.qwerty #e-btn {
+          grid-area: e; }
+        body .keyboard .keyboard-latin.qwerty #r-btn,
+        body .keyboard .keyboard-polish.qwerty #r-btn {
+          grid-area: r; }
+        body .keyboard .keyboard-latin.qwerty #t-btn,
+        body .keyboard .keyboard-polish.qwerty #t-btn {
+          grid-area: t; }
+        body .keyboard .keyboard-latin.qwerty #y-btn,
+        body .keyboard .keyboard-polish.qwerty #y-btn {
+          grid-area: y; }
+        body .keyboard .keyboard-latin.qwerty #u-btn,
+        body .keyboard .keyboard-polish.qwerty #u-btn {
+          grid-area: u; }
+        body .keyboard .keyboard-latin.qwerty #i-btn,
+        body .keyboard .keyboard-polish.qwerty #i-btn {
+          grid-area: i; }
+        body .keyboard .keyboard-latin.qwerty #o-btn,
+        body .keyboard .keyboard-polish.qwerty #o-btn {
+          grid-area: o; }
+        body .keyboard .keyboard-latin.qwerty #p-btn,
+        body .keyboard .keyboard-polish.qwerty #p-btn {
+          grid-area: p; }
+        body .keyboard .keyboard-latin.qwerty #a-btn,
+        body .keyboard .keyboard-polish.qwerty #a-btn {
+          grid-area: a; }
+        body .keyboard .keyboard-latin.qwerty #s-btn,
+        body .keyboard .keyboard-polish.qwerty #s-btn {
+          grid-area: s; }
+        body .keyboard .keyboard-latin.qwerty #d-btn,
+        body .keyboard .keyboard-polish.qwerty #d-btn {
+          grid-area: d; }
+        body .keyboard .keyboard-latin.qwerty #f-btn,
+        body .keyboard .keyboard-polish.qwerty #f-btn {
+          grid-area: f; }
+        body .keyboard .keyboard-latin.qwerty #g-btn,
+        body .keyboard .keyboard-polish.qwerty #g-btn {
+          grid-area: g; }
+        body .keyboard .keyboard-latin.qwerty #h-btn,
+        body .keyboard .keyboard-polish.qwerty #h-btn {
+          grid-area: h; }
+        body .keyboard .keyboard-latin.qwerty #j-btn,
+        body .keyboard .keyboard-polish.qwerty #j-btn {
+          grid-area: j; }
+        body .keyboard .keyboard-latin.qwerty #k-btn,
+        body .keyboard .keyboard-polish.qwerty #k-btn {
+          grid-area: k; }
+        body .keyboard .keyboard-latin.qwerty #l-btn,
+        body .keyboard .keyboard-polish.qwerty #l-btn {
+          grid-area: l; }
+        body .keyboard .keyboard-latin.qwerty #z-btn,
+        body .keyboard .keyboard-polish.qwerty #z-btn {
+          grid-area: z; }
+        body .keyboard .keyboard-latin.qwerty #x-btn,
+        body .keyboard .keyboard-polish.qwerty #x-btn {
+          grid-area: x; }
+        body .keyboard .keyboard-latin.qwerty #c-btn,
+        body .keyboard .keyboard-polish.qwerty #c-btn {
+          grid-area: c; }
+        body .keyboard .keyboard-latin.qwerty #v-btn,
+        body .keyboard .keyboard-polish.qwerty #v-btn {
+          grid-area: v; }
+        body .keyboard .keyboard-latin.qwerty #b-btn,
+        body .keyboard .keyboard-polish.qwerty #b-btn {
+          grid-area: b; }
+        body .keyboard .keyboard-latin.qwerty #n-btn,
+        body .keyboard .keyboard-polish.qwerty #n-btn {
+          grid-area: n; }
+        body .keyboard .keyboard-latin.qwerty #m-btn,
+        body .keyboard .keyboard-polish.qwerty #m-btn {
+          grid-area: m; }
+        body .keyboard .keyboard-latin.qwerty #backspace-btn,
+        body .keyboard .keyboard-polish.qwerty #backspace-btn {
+          grid-area: §; }
+      body .keyboard .keyboard-latin .key,
+      body .keyboard .keyboard-latin .backspace-btn,
+      body .keyboard .keyboard-polish .key,
+      body .keyboard .keyboard-polish .backspace-btn {
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        border: 1px solid #000000;
+        border-radius: 5px;
+        font-size: 30px;
+        background-color: #ffffff; }
+        body .keyboard .keyboard-latin .key.backspace-btn,
+        body .keyboard .keyboard-latin .backspace-btn.backspace-btn,
+        body .keyboard .keyboard-polish .key.backspace-btn,
+        body .keyboard .keyboard-polish .backspace-btn.backspace-btn {
+          width: 100px; }
+        body .keyboard .keyboard-latin .key:hover,
+        body .keyboard .keyboard-latin .backspace-btn:hover,
+        body .keyboard .keyboard-polish .key:hover,
+        body .keyboard .keyboard-polish .backspace-btn:hover {
+          cursor: pointer;
+          background-color: #e6e6e6; }
+    body .keyboard .key.letter {
+      background-color: #cccccc; }
+      body .keyboard .key.letter:hover {
+        background-color: #b3b3b3; }
+    body .keyboard .key.used, body .keyboard .key.correct-order {
+      background-color: #00ff00; }
+      body .keyboard .key.used:hover, body .keyboard .key.correct-order:hover {
+        background-color: #00cc00; }
