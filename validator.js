@@ -1,11 +1,22 @@
 export const validator = (input, word) => {
-	let inputArray = [];
-	let correctLettersArray = [];
-	let possibleLetterIndexes = [];
+	let resultArr = [];
+	const inputArr = Array.from(input);
+	const wordArr = Array.from(word);
+	const wordSet = new Set(wordArr);
 
-	function populateInputArray() {
+	function hideLetterFrom(arr, index) {
+		arr.splice(index, 1, '#');
+	}
+
+	function hideSubstring(str, start, end) {
+		let replacement = '#'.repeat(end - start);
+		let newStr = str.substring(0, start) + replacement + str.substring(end);
+		return newStr;
+	}
+
+	function populateResultArr() {
 		Array.from(input).forEach((letter, index) => {
-			inputArray.push({
+			resultArr.push({
 				index: index,
 				letter: letter,
 				isPossible: false,
@@ -16,206 +27,179 @@ export const validator = (input, word) => {
 				isInSequence: false,
 				isFirstInSequence: false,
 				isLastInSequence: false,
-				sequenceNumber: null,
+				sequenceNumber: [],
+				matchingIndices: new Set(),
+				priority: 0,
 			});
 		});
 	}
 
-	function checkForPossibleLetters() {
-		const inputArr = Array.from(input);
-		const wordArr = Array.from(word); //used to check if letter is in word even if duplicated
-		let wordArrMutable = Array.from(word); //used to get actual unique letters
-		inputArr.forEach((letter, index) => {
-			if (wordArr.includes(letter)) {
-				inputArray[index].isPossible = true;
+	function getPossibleLetters() {
+		const result = inputArr.filter((letter, index) => {
+			if (wordSet.has(letter)) {
+				resultArr[index].isPossible = true;
+				return true;
 			}
-			if (wordArrMutable.includes(letter)) {
-				correctLettersArray.push(letter);
-				wordArrMutable.splice(wordArrMutable.indexOf(letter), 1); //remove letter from wordArrMutable to avoid duplicates
+		});
+		return result;
+	}
+
+	function getPossibleUniqueLetters(possibleLetters) {
+		const localWordArr = wordArr.slice();
+		const result = possibleLetters.filter(letter => {
+			if (localWordArr.indexOf(letter) !== -1) {
+				localWordArr.splice(localWordArr.indexOf(letter), 1);
+				return true;
+			}
+		});
+		return result;
+	}
+
+	function getMatchingIndices(letter, arr) {
+		const indices = arr.reduce((acc, l, index) => {
+			if (l === letter) {
+				acc.push(index);
+			}
+			return acc;
+		}, []);
+		return indices;
+	}
+
+	function longestCommonSubstring(str1, str2) {
+		let matrix = Array(str1.length + 1)
+			.fill(null)
+			.map(() => Array(str2.length + 1).fill(0));
+		let maxLength = 0;
+		let end = 0;
+
+		for (let i = 1; i <= str1.length; i++) {
+			for (let j = 1; j <= str2.length; j++) {
+				if (str1[i - 1] === str2[j - 1]) {
+					matrix[i][j] = matrix[i - 1][j - 1] + 1;
+					if (matrix[i][j] > maxLength) {
+						maxLength = matrix[i][j];
+						end = i - 1;
+					}
+				}
+			}
+		}
+
+		return str1.slice(end - maxLength + 1, end + 1);
+	}
+
+	function matchStrings(str, substring) {
+		let startIndex = str.indexOf(substring);
+		if (startIndex !== -1) {
+			let endIndex = startIndex + substring.length;
+			return [startIndex, endIndex];
+		} else {
+			return null;
+		}
+	}
+
+	function getSequences() {
+		resultArr.forEach(element => {
+			const nextLetter = resultArr[element.index + 1]?.letter;
+			const previousLetter = resultArr[element.index - 1]?.letter;
+			const wordIndices = getMatchingIndices(element.letter, wordArr);
+			wordIndices.forEach(i => {
+				if (wordArr[i - 1] === previousLetter) {
+					element.matchingIndices.add(i);
+				}
+				if (wordArr[i + 1] === nextLetter) {
+					element.matchingIndices.add(i);
+				}
+			});
+		});
+
+		let substrings = [];
+		let newInput = input.slice();
+		let newWord = word.slice();
+		(function getAllSubstrings() {
+			let substr1 = longestCommonSubstring(newInput, newWord);
+			newInput = newInput.replace(substr1, '');
+			newWord = newWord.replace(substr1, '');
+			if (substr1.length <= 1) {
+				return;
+			} else {
+				substrings.push(substr1);
+				getAllSubstrings();
+			}
+		})();
+
+		let localInput = input.slice();
+		let indices = [];
+
+		substrings.forEach((substring, i) => {
+			indices.push(matchStrings(localInput, substring));
+			localInput = hideSubstring(localInput, indices[i][0], indices[i][1]);
+		});
+
+		indices.forEach(index => {
+			let range = Array.from({ length: index[1] - index[0] }, (_, i) => i + index[0]);
+			if (range.length > 1) {
+				range.forEach((index, i) => {
+					if (i === 0) {
+						resultArr[index].isFirstInSequence = true;
+						resultArr[index].isInSequence = true;
+						resultArr[index].priority += 2;
+					} else if (i === range.length - 1) {
+						resultArr[index].isLastInSequence = true;
+						resultArr[index].isInSequence = true;
+						resultArr[index].priority += 2;
+					} else {
+						resultArr[index].isInSequence = true;
+						resultArr[index].priority += 2;
+					}
+				});
 			}
 		});
 	}
 
-	function searchForSequence() {
-		inputArray
-			.filter(letter => letter.isPossible)
-			.forEach(letter => {
-				possibleLetterIndexes.push({ l: letter.letter, i: letter.index });
-			});
-
-		for (let i = 0; i < possibleLetterIndexes.length; i++) {
-			if (
-				correctLettersArray.includes(possibleLetterIndexes[i].l) &&
-				possibleLetterIndexes[i + 1] &&
-				correctLettersArray.includes(possibleLetterIndexes[i + 1].l) &&
-				possibleLetterIndexes[i + 1].i - possibleLetterIndexes[i].i === 1
-			) {
-				let wordArr = Array.from(word);
-				let currentLetterWordIndex = wordArr.indexOf(possibleLetterIndexes[i].l);
-				// change all letters in wordArr from index 0 to currentLetterWordIndex to '#'
-				wordArr.fill('#', 0, currentLetterWordIndex + 1);
-				let nextLetterWordIndex = wordArr.indexOf(possibleLetterIndexes[i + 1].l);
-				if (currentLetterWordIndex + 1 === nextLetterWordIndex) {
-					inputArray[possibleLetterIndexes[i].i].isUsed = true;
-					inputArray[possibleLetterIndexes[i].i].isInSequence = true;
-					inputArray[possibleLetterIndexes[i].i].sequenceNumber = currentLetterWordIndex;
-					inputArray[possibleLetterIndexes[i + 1].i].isUsed = true;
-					inputArray[possibleLetterIndexes[i + 1].i].isInSequence = true;
-					inputArray[possibleLetterIndexes[i + 1].i].sequenceNumber = nextLetterWordIndex;
-					correctLettersArray.splice(correctLettersArray.indexOf(possibleLetterIndexes[i].l), 1);
-					if (
-						inputArray[possibleLetterIndexes[i].i].index === 0 &&
-						inputArray[possibleLetterIndexes[i].i].letter === word[0]
-					) {
-						inputArray[possibleLetterIndexes[i].i].isFirst = true;
-					}
-				}
-			} else if (inputArray[possibleLetterIndexes[i].i].isInSequence) {
-				correctLettersArray.splice(correctLettersArray.indexOf(possibleLetterIndexes[i].l), 1);
-				if (
-					inputArray[possibleLetterIndexes[i].i].index === inputArray.length - 1 &&
-					inputArray[possibleLetterIndexes[i].i].letter === word[word.length - 1]
-				) {
-					inputArray[possibleLetterIndexes[i].i].isLast = true;
-				}
-			}
+	function checkFirstLetter() {
+		if (resultArr[0].letter === word[0]) {
+			resultArr[0].isFirst = true;
+			resultArr[0].priority += 3;
 		}
 	}
 
-	function checkForFirstLetter() {
-		if (inputArray[0].letter === word[0]) {
-			inputArray[0].isPossible = true;
-			inputArray[0].isUsed = true;
-			inputArray[0].isFirst = true;
-			inputArray[0].isCorrectOrder = true;
-			correctLettersArray.splice(correctLettersArray.indexOf(inputArray[0].letter), 1);
-		}
-	}
-
-	function checkForLastLetter() {
-		if (inputArray[inputArray.length - 1].letter === word[word.length - 1]) {
-			inputArray[inputArray.length - 1].isPossible = true;
-			inputArray[inputArray.length - 1].isUsed = true;
-			inputArray[inputArray.length - 1].isLast = true;
-			inputArray[inputArray.length - 1].isCorrectOrder = true;
-			correctLettersArray.splice(correctLettersArray.indexOf(inputArray[inputArray.length - 1].letter), 1);
-		}
-	}
-
-	function checkForRemainingLetters() {
-		if (correctLettersArray.length > 0) {
-			let remainingLetters = inputArray.filter(letter => letter.isPossible && !letter.isUsed);
-			remainingLetters.forEach((letter, index) => {
-				if (correctLettersArray.includes(letter.letter)) {
-					inputArray[letter.index].isUsed = true;
-					correctLettersArray.splice(correctLettersArray.indexOf(letter.letter), 1);
-					if (
-						inputArray[possibleLetterIndexes[index].i].index === 0 &&
-						inputArray[possibleLetterIndexes[index].i].letter === word[0]
-					) {
-						inputArray[possibleLetterIndexes[index].i].isFirst = true;
-					} else if (
-						inputArray[possibleLetterIndexes[index].i].index === inputArray.length - 1 &&
-						inputArray[possibleLetterIndexes[index].i].letter === word[word.length - 1]
-					) {
-						inputArray[possibleLetterIndexes[index].i].isLast = true;
-					}
-				}
-			});
+	function checkLastLetter() {
+		if (resultArr[resultArr.length - 1].letter === word[word.length - 1]) {
+			resultArr[resultArr.length - 1].isLast = true;
+			resultArr[resultArr.length - 1].priority += 3;
 		}
 	}
 
 	function checkOrder() {
-		let checkOrderWord = [...word].join('');
-		let usedLettersArray = [];
-		let usedIndexesArray = [];
-		let tempLetterArray = [];
-		let tempIndexArray = [];
-
-		inputArray.forEach(letter => {
-			if (letter.isUsed && !letter.isInSequence) {
-				if (tempLetterArray.length > 0) {
-					usedLettersArray.push(tempLetterArray.join(''));
-					usedIndexesArray.push('test');
-					tempLetterArray = [];
-					tempIndexArray = [];
-				}
-				usedLettersArray.push(letter.letter);
-				usedIndexesArray.push(letter.index);
-			} else if (letter.isUsed && letter.isInSequence && !letter.isLastInSequence) {
-				tempLetterArray.push(letter.letter);
-				console.log('loop 1 letter.index: ', letter.index);
-				tempIndexArray.push(letter.index);
-			} else if (letter.isUsed && letter.isInSequence && letter.isLastInSequence) {
-				tempLetterArray.push(letter.letter);
-				usedLettersArray.push(tempLetterArray.join(''));
-				tempLetterArray = [];
-				console.log('tempIndexArray in loop before push: ', tempIndexArray);
-				tempIndexArray.push(letter.index);
-				console.log('letter.index in loop: ', letter.index);
-				console.log('tempIndexArray in loop: ', tempIndexArray);
-				usedIndexesArray.push('test2');
-				tempIndexArray = [];
-			}
-		});
-		console.log('usedLettersArray: ', usedLettersArray);
-		console.log('checkOrderWord: ', checkOrderWord);
-		console.log('usedIndexesArray: ', usedIndexesArray);
-		usedLettersArray.forEach((str, i) => {
-			let index = checkOrderWord.indexOf(str);
-			if (index !== -1) {
-				inputArray[usedIndexesArray[i]].isCorrectOrder = true;
-				checkOrderWord = checkOrderWord.replace(str, '#');
-				console.log('checkOrderWord 2: ', checkOrderWord);
-			}
-		});
-
-		let currentLetterWordIndex = 0;
-		usedLettersArray.forEach(letter => {
-			if (checkOrderArray.includes(letter.letter)) {
-				currentLetterWordIndex = checkOrderArray.indexOf(letter.letter);
-				checkOrderArray = checkOrderArray.splice(currentLetterWordIndex);
-				inputArray[letter.index].isCorrectOrder = true;
+		const usedLettersArray = resultArr.filter(letter => letter.isUsed);
+		let tempWordArray = wordArr.slice();
+		usedLettersArray.forEach(element => {
+			if (tempWordArray.indexOf(element.letter) !== -1) {
+				resultArr[element.index].isCorrectOrder = true;
+				resultArr[element.index].priority += 1;
+				tempWordArray = tempWordArray.slice(tempWordArray.indexOf(element.letter) + 1);
 			}
 		});
 	}
 
-	function findPositionInSequence() {
-		for (let i = 0; i < inputArray.length; i++) {
-			if (
-				inputArray[i].isInSequence &&
-				(!inputArray[i - 1] ||
-					!inputArray[i - 1].isInSequence ||
-					inputArray[i - 1].sequenceNumber !== inputArray[i].sequenceNumber - 1)
-			) {
-				inputArray[i].isFirstInSequence = true;
-			} else if (
-				inputArray[i].isInSequence &&
-				(!inputArray[i + 1] ||
-					!inputArray[i + 1].isInSequence ||
-					inputArray[i + 1].sequenceNumber !== inputArray[i].sequenceNumber + 1)
-			) {
-				inputArray[i].isLastInSequence = true;
-			}
-		}
+	function getUsedLetters() {
+		possibleUniqueLetters.forEach(letter => {
+			const indices = getMatchingIndices(letter, inputArr);
+			const sortedIndices = indices.sort((a, b) => {
+				return resultArr[b].priority - resultArr[a].priority;
+			});
+			resultArr[sortedIndices[0]].isUsed = true;
+			hideLetterFrom(inputArr, sortedIndices[0]);
+		});
 	}
 
-	populateInputArray();
-	checkForPossibleLetters();
-	console.log('original correctLettersArray: ', correctLettersArray);
-	//checkForFirstLetter();
-	//console.log('correctLettersArray after first letter: ', correctLettersArray);
-	//checkForLastLetter();
-	//console.log('correctLettersArray after last letter: ', correctLettersArray);
-	searchForSequence();
-	console.log('correctLettersArray after sequence: ', correctLettersArray);
-	checkForRemainingLetters();
-	console.log('correctLettersArray after remaining letters: ', correctLettersArray);
-	findPositionInSequence();
+	populateResultArr();
+	const possibleLetters = getPossibleLetters();
+	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters);
+	getSequences();
+	checkFirstLetter();
+	checkLastLetter();
+	getUsedLetters();
 	checkOrder();
-	console.log('inputArray: ', inputArray);
-	return inputArray;
+	return resultArr;
 };
-
-//validator('fantastyka', 'migotać');
-validator('trele', 'bambetle');

@@ -1,4 +1,4 @@
-import { validator } from './new_validator.js';
+import { validator } from './validator.js';
 
 const testCases = [
 	{ input: 'fantastyka', word: 'migotać' },
