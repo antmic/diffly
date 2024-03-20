@@ -82,25 +82,25 @@ export const validator = (input, word) => {
 		}
 	}
 
-	// function checkForFirstLetter() {
-	// 	if (inputArray[0].letter === word[0]) {
-	// 		inputArray[0].isPossible = true;
-	// 		inputArray[0].isUsed = true;
-	// 		inputArray[0].isFirst = true;
-	// 		inputArray[0].isCorrectOrder = true;
-	// 		correctLettersArray.splice(correctLettersArray.indexOf(inputArray[0].letter), 1);
-	// 	}
-	// }
+	function checkForFirstLetter() {
+		if (inputArray[0].letter === word[0]) {
+			inputArray[0].isPossible = true;
+			inputArray[0].isUsed = true;
+			inputArray[0].isFirst = true;
+			inputArray[0].isCorrectOrder = true;
+			correctLettersArray.splice(correctLettersArray.indexOf(inputArray[0].letter), 1);
+		}
+	}
 
-	// function checkForLastLetter() {
-	// 	if (inputArray[inputArray.length - 1].letter === word[word.length - 1]) {
-	// 		inputArray[inputArray.length - 1].isPossible = true;
-	// 		inputArray[inputArray.length - 1].isUsed = true;
-	// 		inputArray[inputArray.length - 1].isLast = true;
-	// 		inputArray[inputArray.length - 1].isCorrectOrder = true;
-	// 		correctLettersArray.splice(correctLettersArray.indexOf(inputArray[inputArray.length - 1].letter), 1);
-	// 	}
-	// }
+	function checkForLastLetter() {
+		if (inputArray[inputArray.length - 1].letter === word[word.length - 1]) {
+			inputArray[inputArray.length - 1].isPossible = true;
+			inputArray[inputArray.length - 1].isUsed = true;
+			inputArray[inputArray.length - 1].isLast = true;
+			inputArray[inputArray.length - 1].isCorrectOrder = true;
+			correctLettersArray.splice(correctLettersArray.indexOf(inputArray[inputArray.length - 1].letter), 1);
+		}
+	}
 
 	function checkForRemainingLetters() {
 		if (correctLettersArray.length > 0) {
@@ -170,27 +170,14 @@ export const validator = (input, word) => {
 			}
 		});
 
-		// for (let i = 0; i < inputArray.length; i++) {
-		// 	if (inputArray[i + 1] && inputArray[i + 1].sequenceNumber - inputArray[i].sequenceNumber === 1) {
-		// 		// if no element.index in tempArray is equal to inputArray[i].index push inputArray[i] to tempArray
-		// 		if (!tempArray.some(element => element.index === inputArray[i].index)) {
-		// 			tempArray.push(inputArray[i]);
-		// 		}
-		// 		// if no element.index in tempArray is equal to inputArray[i + 1].index push inputArray[i + 1] to tempArray
-		// 		if (!tempArray.some(element => element.index === inputArray[i + 1].index)) {
-		// 			tempArray.push(inputArray[i + 1]);
-		// 		}
-		// 	}
-		// }
-
-		// let currentLetterWordIndex = 0;
-		// usedLettersArray.forEach(letter => {
-		// 	if (checkOrderArray.includes(letter.letter)) {
-		// 		currentLetterWordIndex = checkOrderArray.indexOf(letter.letter);
-		// 		checkOrderArray = checkOrderArray.splice(currentLetterWordIndex);
-		// 		inputArray[letter.index].isCorrectOrder = true;
-		// 	}
-		// });
+		let currentLetterWordIndex = 0;
+		usedLettersArray.forEach(letter => {
+			if (checkOrderArray.includes(letter.letter)) {
+				currentLetterWordIndex = checkOrderArray.indexOf(letter.letter);
+				checkOrderArray = checkOrderArray.splice(currentLetterWordIndex);
+				inputArray[letter.index].isCorrectOrder = true;
+			}
+		});
 	}
 
 	function findPositionInSequence() {
