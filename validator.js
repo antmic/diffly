@@ -1,4 +1,8 @@
 export const validator = (input, word) => {
+	if (input === word) {
+		return word;
+	}
+
 	let resultArr = [];
 	const inputArr = Array.from(input);
 	const wordArr = Array.from(word);

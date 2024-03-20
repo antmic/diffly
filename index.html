@@ -4,15 +4,19 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script type="module" src="./index.js" defer></script>
-		<link rel="stylesheet" href="./index.css" />
-		<title>klon Diffle</title>
+		<link rel="stylesheet" href="./style.css" />
+		<title>Klon Diffle</title>
 	</head>
 	<body>
-		<h1>klon Diffle</h1>
-		<button id="start-btn" class="start-btn" title="rozpocznij">Rozpocznij!</button>
+		<div class="header">
+			<h1>Klon Diffle</h1>
+			<button id="start-btn" class="start-btn" title="rozpocznij">Rozpocznij!</button>
+		</div>
 		<div id="output" class="output"></div>
-		<input disabled type="text" id="input" class="input" placeholder="wpisz tekst" />
-		<button disabled id="enter-btn" class="enter-btn" title="sprawdź">Sprawdź!</button>
+		<div class="input-wrapper">
+			<input disabled type="text" id="input" class="input" placeholder="wpisz tekst" />
+			<button disabled id="enter-btn" class="enter-btn" title="sprawdź">Sprawdź!</button>
+		</div>
 		<div id="keyboard" class="keyboard">
 			<div id="keyboard-latin" class="keyboard-latin qwerty">
 				<button disabled class="key" id="a-btn">a</button>
@@ -54,7 +58,6 @@
 				<button disabled class="key" id="ź-btn">ź</button>
 				<button disabled class="key" id="ż-btn">ż</button>
 			</div>
-			<button disabled id="switch-btn" class="switch-btn">zmień układ</button>
 		</div>
 	</body>
 </html>

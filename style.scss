@@ -4,24 +4,88 @@ $gray: #cccccc;
 $yellow: #ffff00;
 $green: #00ff00;
 
+@mixin btn-style {
+	padding: 10px;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 50px;
+	font-size: 20px;
+	box-shadow: 2px 2px 5px 2px gray;
+	transition: all 0.3s ease-in-out;
+
+	&:hover {
+		cursor: pointer;
+		box-shadow: none;
+		background-color: darken($color: $white, $amount: 10%);
+	}
+}
+
+@keyframes press {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(0.9);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
 body {
+	margin: 10px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+		'Helvetica Neue', sans-serif;
 
-	h1 {
-	}
-	.start-btn {
+	.header {
+		display: flex;
+		width: 100%;
+		justify-content: space-between;
+
+		h1 {
+			margin: 0;
+		}
+
+		.start-btn {
+			@include btn-style;
+		}
 	}
 	.output {
 		margin: 20px;
+		max-height: 40vh;
+		overflow-y: auto;
+		position: relative;
+		width: 100%;
+
+		&:before {
+			content: '';
+			position: sticky;
+			display: block;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 50px;
+			background: linear-gradient(to bottom, white, transparent);
+			pointer-events: none; // This allows clicks to pass through to the elements below
+		}
 
 		.guess-word {
-			margin-bottom: 20px;
+			margin-bottom: 10px;
 			display: flex;
+			justify-content: center;
+			transition: all 1s ease-in-out;
 
 			.letter {
-				font-size: 30px;
+				font-size: 20px;
 				font-weight: 500;
 				padding: 5px;
 				border: 1px solid $black;
@@ -31,6 +95,7 @@ body {
 				height: 40px;
 				text-align: center;
 				background-color: $gray;
+				animation: press 0.2s ease;
 
 				&.used {
 					background-color: $yellow;
@@ -68,7 +133,32 @@ body {
 		}
 	}
 
-	.input {
+	.input-wrapper {
+		margin: 10px;
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+
+		& > * {
+			@include btn-style;
+			font-size: 16px;
+		}
+
+		.input {
+			box-shadow: none;
+			padding: 10px 20px;
+			outline: none;
+			transition: none;
+			width: 65%;
+
+			&:focus-visible {
+				border: 2px solid black;
+			}
+		}
+
+		.enter-btn {
+			width: 30%;
+		}
 	}
 
 	.keyboard {
@@ -176,21 +266,28 @@ body {
 
 			.key,
 			.backspace-btn {
-				width: 50px;
+				width: 8vw;
 				height: 50px;
-				margin: 10px;
+				margin: 1vw;
 				border: 1px solid $black;
 				border-radius: 5px;
-				font-size: 30px;
+				font-size: 20px;
 				background-color: $white;
+				box-shadow: 2px 2px 5px 2px gray;
+				transition: all 0.3s ease-in-out;
 
 				&.backspace-btn {
-					width: 100px;
+					width: 18vw;
 				}
 
 				&:hover {
 					cursor: pointer;
 					background-color: darken($color: $white, $amount: 10%);
+					box-shadow: none;
+				}
+
+				&.pressed {
+					box-shadow: none;
 				}
 			}
 		}
@@ -212,4 +309,12 @@ body {
 			}
 		}
 	}
+}
+
+//big mobile
+@media (min-width: 640px) {
+}
+
+// tablet
+@media (min-width: 768px) {
 }

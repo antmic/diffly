@@ -6,7 +6,6 @@ const input = document.getElementById('input');
 const output = document.getElementById('output');
 const keyboard = Array.from(document.getElementsByClassName('key'));
 const backspace = document.getElementById('backspace-btn');
-const switchBtn = document.getElementById('switch-btn');
 
 let word = '';
 
@@ -88,26 +87,30 @@ enterBtn.addEventListener('click', async () => {
 const validate = word => {
 	let validatedWord = validator(input.value, word);
 	console.log('validatedWord: ', validatedWord);
-	if (validatedWord === false) {
+	if (validatedWord === word) {
 		alert(`Gratulacje! Zgadłeś słowo! Hasło to: ${word}`);
 		input.value = '';
+		getWord();
 		return;
 	} else {
 		let newGuessWord = document.createElement('div');
 		newGuessWord.classList.add('guess-word');
-		validatedWord.forEach(letter => {
-			let newLetter = document.createElement('div');
-			addClasses(letter, newLetter);
-			newLetter.innerText = letter.letter;
-			newGuessWord.appendChild(newLetter);
-			output.appendChild(newGuessWord);
-			input.value = '';
+		output.appendChild(newGuessWord);
+		input.value = '';
+		validatedWord.forEach((letter, index) => {
+			setTimeout(function () {
+				let newLetter = document.createElement('div');
+				addClasses(letter, newLetter);
+				newLetter.innerText = letter.letter;
+				newGuessWord.appendChild(newLetter);
+				output.scrollTop = output.scrollHeight;
+			}, index * 300);
 		});
 	}
 };
 
 startBtn.addEventListener('click', async () => {
-	[switchBtn, input, enterBtn, backspace, ...keyboard].forEach(key => {
+	[input, enterBtn, backspace, ...keyboard].forEach(key => {
 		key.removeAttribute('disabled');
 	});
 	input.value = '';
@@ -128,13 +131,22 @@ backspace.addEventListener('click', () => {
 	input.value = input.value.slice(0, -1);
 });
 
-switchBtn.addEventListener('click', () => {
-	const keyboardLatin = document.getElementById('keyboard-latin');
-	keyboardLatin.classList.toggle('qwerty');
-});
-
 document.addEventListener('keydown', function (event) {
 	if (event.key === 'Enter') {
 		document.querySelector('.enter-btn').click();
+	}
+});
+
+document.addEventListener('keydown', function (event) {
+	let key = event.key.toLowerCase();
+	let button = document.getElementById(key + '-btn');
+
+	if (button) {
+		button.classList.add('pressed');
+
+		// Remove the class after the animation has completed
+		setTimeout(function () {
+			button.classList.remove('pressed');
+		}, 200);
 	}
 });
