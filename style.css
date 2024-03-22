@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@keyframes press {
+@keyframes drop {
   0% {
     transform: scale(1); }
   50% {
@@ -11,37 +11,108 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box; }
+  *:focus-visible {
+    outline: none; }
 
 body {
+  background-color: #ffeff3;
   margin: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+  body button {
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 50px;
+    font-size: 16px;
+    box-shadow: 2px 2px 5px 2px gray;
+    transition: all 0.3s ease-in-out; }
+    body button.pressed {
+      box-shadow: none; }
+    @media (min-width: 768px) {
+      body button:not(:disabled):hover {
+        cursor: pointer;
+        box-shadow: none; } }
+  body .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid #000;
+    width: 90%;
+    max-width: 400px;
+    margin: 10px auto;
+    padding: 15px;
+    align-self: center;
+    text-align: center; }
+    body .modal::backdrop {
+      background: rgba(0, 0, 0, 0.8); }
+    body .modal > * {
+      margin: 20px 10px; }
+    body .modal .password {
+      font-size: 30px;
+      font-weight: 700;
+      color: #9b557d;
+      padding: 10px 0 20px; }
+    body .modal .button-wrapper {
+      display: flex;
+      justify-content: space-around;
+      gap: 10px; }
+      body .modal .button-wrapper button {
+        padding: 10px 20px; }
+      body .modal .button-wrapper .close-btn {
+        background-color: #ffb3ba; }
+      body .modal .button-wrapper .play-again-btn {
+        background-color: #baffc9; }
+  body .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 1;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(-120%);
+    max-width: 90%; }
+    body .dialog.show {
+      transform: translateX(0); }
+    body .dialog > * {
+      margin: 10px; }
+    body .dialog .instruction-point {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 30px; }
+      body .dialog .instruction-point img {
+        height: 50px; }
+    body .dialog button {
+      padding: 10px 20px; }
   body .header {
     display: flex;
     width: 100%;
-    justify-content: space-between; }
+    position: fixed;
+    justify-content: space-around; }
     body .header h1 {
-      margin: 0; }
-    body .header .start-btn {
-      padding: 10px;
-      background-color: white;
-      border: 1px solid black;
-      border-radius: 50px;
-      font-size: 20px;
-      box-shadow: 2px 2px 5px 2px gray;
-      transition: all 0.3s ease-in-out; }
-      body .header .start-btn:hover {
-        cursor: pointer;
-        box-shadow: none;
-        background-color: #e6e6e6; }
+      margin: 0;
+      color: #9b557d; }
+    body .header button {
+      padding: 10px 20px; }
   body .output {
     margin: 20px;
-    max-height: 40vh;
+    max-height: 44vh;
     overflow-y: auto;
-    position: relative;
-    width: 100%; }
+    position: fixed;
+    width: 100%;
+    top: 50px; }
     body .output:before {
       content: '';
       position: sticky;
@@ -50,7 +121,17 @@ body {
       left: 0;
       width: 100%;
       height: 50px;
-      background: linear-gradient(to bottom, white, transparent);
+      background: linear-gradient(to bottom, #ffeff3, transparent);
+      pointer-events: none; }
+    body .output:after {
+      content: '';
+      position: sticky;
+      display: block;
+      bottom: 25px;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(to top, #ffeff3, transparent);
       pointer-events: none; }
     body .output .guess-word {
       margin-bottom: 10px;
@@ -68,15 +149,15 @@ body {
         height: 40px;
         text-align: center;
         background-color: #cccccc;
-        animation: press 0.2s ease; }
+        animation: drop 0.2s ease; }
         body .output .guess-word .letter.used {
-          background-color: #ffff00; }
+          background-color: #ffffba; }
         body .output .guess-word .letter.first {
           border-radius: 0 50% 50% 0; }
         body .output .guess-word .letter.last {
           border-radius: 50% 0 0 50%; }
         body .output .guess-word .letter.correct-order {
-          background-color: #00ff00; }
+          background-color: #baffc9; }
         body .output .guess-word .letter.middle-in-sequence {
           margin: 5px 0;
           border-radius: 0; }
@@ -88,165 +169,162 @@ body {
           margin: 5px 5px 5px 0;
           border-top-left-radius: 0;
           border-bottom-left-radius: 0; }
-  body .input-wrapper {
-    margin: 10px;
-    display: flex;
-    justify-content: space-around;
-    width: 100%; }
-    body .input-wrapper > * {
-      padding: 10px;
-      background-color: white;
-      border: 1px solid black;
-      border-radius: 50px;
-      font-size: 20px;
-      box-shadow: 2px 2px 5px 2px gray;
-      transition: all 0.3s ease-in-out;
-      font-size: 16px; }
-      body .input-wrapper > *:hover {
-        cursor: pointer;
-        box-shadow: none;
-        background-color: #e6e6e6; }
-    body .input-wrapper .input {
-      box-shadow: none;
-      padding: 10px 20px;
-      outline: none;
-      transition: none;
-      width: 65%; }
-      body .input-wrapper .input:focus-visible {
-        border: 2px solid black; }
-    body .input-wrapper .enter-btn {
-      width: 30%; }
-  body .keyboard {
-    display: flex;
-    flex-direction: column;
-    align-items: center; }
-    body .keyboard .keyboard-latin,
-    body .keyboard .keyboard-polish {
+  body .input-keyboard-wrapper {
+    position: fixed;
+    margin-bottom: 20px;
+    bottom: 0;
+    padding-top: 2px;
+    background-color: #ffeff3; }
+    body .input-keyboard-wrapper .input-wrapper {
       display: flex;
-      justify-content: center;
-      flex-wrap: wrap; }
-      body .keyboard .keyboard-latin.qwerty,
-      body .keyboard .keyboard-polish.qwerty {
-        display: grid;
-        grid-template-areas: 'q q w w e e r r t t y y u u i i o o p p' '. a a s s d d f f g g h h j j k k l l .' '. . z z x x c c v v b b n n m m § § § §';
-        grid-template-columns: repeat(20, 1fr);
-        grid-template-rows: repeat(3, 1fr); }
-        body .keyboard .keyboard-latin.qwerty #q-btn,
-        body .keyboard .keyboard-polish.qwerty #q-btn {
-          grid-area: q; }
-        body .keyboard .keyboard-latin.qwerty #w-btn,
-        body .keyboard .keyboard-polish.qwerty #w-btn {
-          grid-area: w; }
-        body .keyboard .keyboard-latin.qwerty #e-btn,
-        body .keyboard .keyboard-polish.qwerty #e-btn {
-          grid-area: e; }
-        body .keyboard .keyboard-latin.qwerty #r-btn,
-        body .keyboard .keyboard-polish.qwerty #r-btn {
-          grid-area: r; }
-        body .keyboard .keyboard-latin.qwerty #t-btn,
-        body .keyboard .keyboard-polish.qwerty #t-btn {
-          grid-area: t; }
-        body .keyboard .keyboard-latin.qwerty #y-btn,
-        body .keyboard .keyboard-polish.qwerty #y-btn {
-          grid-area: y; }
-        body .keyboard .keyboard-latin.qwerty #u-btn,
-        body .keyboard .keyboard-polish.qwerty #u-btn {
-          grid-area: u; }
-        body .keyboard .keyboard-latin.qwerty #i-btn,
-        body .keyboard .keyboard-polish.qwerty #i-btn {
-          grid-area: i; }
-        body .keyboard .keyboard-latin.qwerty #o-btn,
-        body .keyboard .keyboard-polish.qwerty #o-btn {
-          grid-area: o; }
-        body .keyboard .keyboard-latin.qwerty #p-btn,
-        body .keyboard .keyboard-polish.qwerty #p-btn {
-          grid-area: p; }
-        body .keyboard .keyboard-latin.qwerty #a-btn,
-        body .keyboard .keyboard-polish.qwerty #a-btn {
-          grid-area: a; }
-        body .keyboard .keyboard-latin.qwerty #s-btn,
-        body .keyboard .keyboard-polish.qwerty #s-btn {
-          grid-area: s; }
-        body .keyboard .keyboard-latin.qwerty #d-btn,
-        body .keyboard .keyboard-polish.qwerty #d-btn {
-          grid-area: d; }
-        body .keyboard .keyboard-latin.qwerty #f-btn,
-        body .keyboard .keyboard-polish.qwerty #f-btn {
-          grid-area: f; }
-        body .keyboard .keyboard-latin.qwerty #g-btn,
-        body .keyboard .keyboard-polish.qwerty #g-btn {
-          grid-area: g; }
-        body .keyboard .keyboard-latin.qwerty #h-btn,
-        body .keyboard .keyboard-polish.qwerty #h-btn {
-          grid-area: h; }
-        body .keyboard .keyboard-latin.qwerty #j-btn,
-        body .keyboard .keyboard-polish.qwerty #j-btn {
-          grid-area: j; }
-        body .keyboard .keyboard-latin.qwerty #k-btn,
-        body .keyboard .keyboard-polish.qwerty #k-btn {
-          grid-area: k; }
-        body .keyboard .keyboard-latin.qwerty #l-btn,
-        body .keyboard .keyboard-polish.qwerty #l-btn {
-          grid-area: l; }
-        body .keyboard .keyboard-latin.qwerty #z-btn,
-        body .keyboard .keyboard-polish.qwerty #z-btn {
-          grid-area: z; }
-        body .keyboard .keyboard-latin.qwerty #x-btn,
-        body .keyboard .keyboard-polish.qwerty #x-btn {
-          grid-area: x; }
-        body .keyboard .keyboard-latin.qwerty #c-btn,
-        body .keyboard .keyboard-polish.qwerty #c-btn {
-          grid-area: c; }
-        body .keyboard .keyboard-latin.qwerty #v-btn,
-        body .keyboard .keyboard-polish.qwerty #v-btn {
-          grid-area: v; }
-        body .keyboard .keyboard-latin.qwerty #b-btn,
-        body .keyboard .keyboard-polish.qwerty #b-btn {
-          grid-area: b; }
-        body .keyboard .keyboard-latin.qwerty #n-btn,
-        body .keyboard .keyboard-polish.qwerty #n-btn {
-          grid-area: n; }
-        body .keyboard .keyboard-latin.qwerty #m-btn,
-        body .keyboard .keyboard-polish.qwerty #m-btn {
-          grid-area: m; }
-        body .keyboard .keyboard-latin.qwerty #backspace-btn,
-        body .keyboard .keyboard-polish.qwerty #backspace-btn {
-          grid-area: §; }
-      body .keyboard .keyboard-latin .key,
-      body .keyboard .keyboard-latin .backspace-btn,
-      body .keyboard .keyboard-polish .key,
-      body .keyboard .keyboard-polish .backspace-btn {
-        width: 8vw;
-        height: 50px;
-        margin: 1vw;
-        border: 1px solid #000000;
-        border-radius: 5px;
-        font-size: 20px;
+      justify-content: space-around;
+      width: 100%;
+      margin-bottom: 10px; }
+      body .input-keyboard-wrapper .input-wrapper .input {
         background-color: #ffffff;
+        border: 1px solid black;
+        border-radius: 50px;
+        font-size: 16px;
         box-shadow: 2px 2px 5px 2px gray;
-        transition: all 0.3s ease-in-out; }
-        body .keyboard .keyboard-latin .key.backspace-btn,
-        body .keyboard .keyboard-latin .backspace-btn.backspace-btn,
-        body .keyboard .keyboard-polish .key.backspace-btn,
-        body .keyboard .keyboard-polish .backspace-btn.backspace-btn {
-          width: 18vw; }
-        body .keyboard .keyboard-latin .key:hover,
-        body .keyboard .keyboard-latin .backspace-btn:hover,
-        body .keyboard .keyboard-polish .key:hover,
-        body .keyboard .keyboard-polish .backspace-btn:hover {
-          cursor: pointer;
-          background-color: #e6e6e6;
+        transition: all 0.3s ease-in-out;
+        box-shadow: none;
+        padding: 10px 20px;
+        outline: none;
+        transition: none;
+        width: 65%;
+        text-align: center; }
+        body .input-keyboard-wrapper .input-wrapper .input.pressed {
           box-shadow: none; }
-        body .keyboard .keyboard-latin .key.pressed,
-        body .keyboard .keyboard-latin .backspace-btn.pressed,
-        body .keyboard .keyboard-polish .key.pressed,
-        body .keyboard .keyboard-polish .backspace-btn.pressed {
-          box-shadow: none; }
-    body .keyboard .key.letter {
-      background-color: #cccccc; }
-      body .keyboard .key.letter:hover {
-        background-color: #b3b3b3; }
-    body .keyboard .key.used, body .keyboard .key.correct-order {
-      background-color: #00ff00; }
-      body .keyboard .key.used:hover, body .keyboard .key.correct-order:hover {
-        background-color: #00cc00; }
+        body .input-keyboard-wrapper .input-wrapper .input:focus-visible {
+          border: 2px solid black; }
+      body .input-keyboard-wrapper .input-wrapper .enter-btn {
+        width: 30%; }
+    body .input-keyboard-wrapper .keyboard {
+      display: flex;
+      flex-direction: column;
+      align-items: center; }
+      body .input-keyboard-wrapper .keyboard .keyboard-latin,
+      body .input-keyboard-wrapper .keyboard .keyboard-polish {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap; }
+        body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty,
+        body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty {
+          display: grid;
+          grid-template-areas: 'q q w w e e r r t t y y u u i i o o p p' '. a a s s d d f f g g h h j j k k l l .' '. . z z x x c c v v b b n n m m § § § §';
+          grid-template-columns: repeat(20, 1fr);
+          grid-template-rows: repeat(3, 1fr); }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #q-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #q-btn {
+            grid-area: q; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #w-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #w-btn {
+            grid-area: w; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #e-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #e-btn {
+            grid-area: e; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #r-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #r-btn {
+            grid-area: r; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #t-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #t-btn {
+            grid-area: t; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #y-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #y-btn {
+            grid-area: y; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #u-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #u-btn {
+            grid-area: u; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #i-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #i-btn {
+            grid-area: i; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #o-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #o-btn {
+            grid-area: o; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #p-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #p-btn {
+            grid-area: p; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #a-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #a-btn {
+            grid-area: a; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #s-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #s-btn {
+            grid-area: s; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #d-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #d-btn {
+            grid-area: d; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #f-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #f-btn {
+            grid-area: f; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #g-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #g-btn {
+            grid-area: g; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #h-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #h-btn {
+            grid-area: h; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #j-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #j-btn {
+            grid-area: j; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #k-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #k-btn {
+            grid-area: k; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #l-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #l-btn {
+            grid-area: l; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #z-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #z-btn {
+            grid-area: z; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #x-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #x-btn {
+            grid-area: x; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #c-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #c-btn {
+            grid-area: c; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #v-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #v-btn {
+            grid-area: v; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #b-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #b-btn {
+            grid-area: b; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #n-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #n-btn {
+            grid-area: n; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #m-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #m-btn {
+            grid-area: m; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin.qwerty #backspace-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish.qwerty #backspace-btn {
+            grid-area: §; }
+        body .input-keyboard-wrapper .keyboard .keyboard-latin .key,
+        body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn,
+        body .input-keyboard-wrapper .keyboard .keyboard-polish .key,
+        body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn {
+          width: 8vw;
+          max-width: 50px;
+          height: 50px;
+          margin: 1vw;
+          border: 1px solid #000000;
+          border-radius: 5px;
+          font-size: 20px;
+          background-color: #ffc8e7;
+          box-shadow: 2px 2px 5px 2px gray;
+          transition: all 0.3s ease-in-out; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin .key:not(:disabled):hover,
+          body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn:not(:disabled):hover,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish .key:not(:disabled):hover,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn:not(:disabled):hover {
+            background-color: #ff95d1; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin .key.backspace-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn.backspace-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish .key.backspace-btn,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn.backspace-btn {
+            width: 18vw;
+            max-width: 100px; }
+      body .input-keyboard-wrapper .keyboard .key.letter {
+        background-color: #cccccc; }
+        body .input-keyboard-wrapper .keyboard .key.letter:not(:disabled):hover {
+          background-color: #b3b3b3; }
+      body .input-keyboard-wrapper .keyboard .key.used, body .input-keyboard-wrapper .keyboard .key.correct-order {
+        background-color: #baffc9; }
+        body .input-keyboard-wrapper .keyboard .key.used:not(:disabled):hover, body .input-keyboard-wrapper .keyboard .key.correct-order:not(:disabled):hover {
+          background-color: #87ffa1; }

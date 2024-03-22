@@ -1,20 +1,33 @@
 import { validator } from './validator.js';
 
-const startBtn = document.getElementById('start-btn');
-const enterBtn = document.getElementById('enter-btn');
-const input = document.getElementById('input');
-const output = document.getElementById('output');
+function getElement(id) {
+	return document.getElementById(id);
+}
+
+const startBtn = getElement('start-btn');
+const enterBtn = getElement('enter-btn');
+const input = getElement('input');
+const output = getElement('output');
 const keyboard = Array.from(document.getElementsByClassName('key'));
-const backspace = document.getElementById('backspace-btn');
+const backspace = getElement('backspace-btn');
+const instructionsDialog = getElement('instructions-dialog');
+const instructionsBtn = getElement('instructions-btn');
+const closeInstructionsBtn = getElement('close-instructions-btn');
+const successDialog = getElement('success-dialog');
+const playAgainBtn = getElement('play-again-btn');
+const closeSuccessBtn = getElement('close-success-btn');
 
 let word = '';
+let guessWords = [];
 
 async function getWord() {
 	try {
 		const response = await fetch('http://localhost:3000/getword');
 		const data = await response.json();
 		console.log('Success:', data.word);
-		return data.word.toLowerCase();
+		const result = data.word.toLowerCase();
+		localStorage.setItem('diffle-word', result);
+		word = result;
 	} catch (error) {
 		console.error('Error:', error);
 	}
@@ -37,11 +50,11 @@ async function checkWord(inputWord) {
 
 const addClasses = (letter, newLetter) => {
 	const classList = ['letter'];
-	document.getElementById(`${letter.letter}-btn`).classList.add('letter');
+	getElement(`${letter.letter}-btn`).classList.add('letter');
 
 	if (letter.isUsed) {
 		classList.push('used');
-		document.getElementById(`${letter.letter}-btn`).classList.add('used');
+		getElement(`${letter.letter}-btn`).classList.add('used');
 	}
 	if (letter.isFirst) {
 		classList.push('first');
@@ -51,7 +64,7 @@ const addClasses = (letter, newLetter) => {
 	}
 	if (letter.isCorrectOrder) {
 		classList.push('correct-order');
-		document.getElementById(`${letter.letter}-btn`).classList.add('correct-order');
+		getElement(`${letter.letter}-btn`).classList.add('correct-order');
 	}
 	if (letter.isInSequence && !letter.isFirstInSequence && !letter.isLastInSequence) {
 		classList.push('middle-in-sequence');
@@ -84,41 +97,60 @@ enterBtn.addEventListener('click', async () => {
 	}
 });
 
-const validate = word => {
+const validate = async word => {
 	let validatedWord = validator(input.value, word);
+	guessWords.push(validatedWord);
+	localStorage.setItem('diffle-input', JSON.stringify(guessWords));
 	console.log('validatedWord: ', validatedWord);
+	input.value = '';
 	if (validatedWord === word) {
-		alert(`Gratulacje! Zgadłeś słowo! Hasło to: ${word}`);
-		input.value = '';
-		getWord();
-		return;
+		const dialog = getElement('success-dialog');
+		dialog.showModal();
+		getElement('password').innerText = word;
+		output.innerHTML = '';
+		guessWords = [];
+		localStorage.removeItem('diffle-word');
+		localStorage.removeItem('diffle-input');
+		clearClasses();
+		document.addEventListener('keydown', disableEscapeKey);
 	} else {
-		let newGuessWord = document.createElement('div');
-		newGuessWord.classList.add('guess-word');
-		output.appendChild(newGuessWord);
-		input.value = '';
-		validatedWord.forEach((letter, index) => {
-			setTimeout(function () {
-				let newLetter = document.createElement('div');
-				addClasses(letter, newLetter);
-				newLetter.innerText = letter.letter;
-				newGuessWord.appendChild(newLetter);
-				output.scrollTop = output.scrollHeight;
-			}, index * 300);
-		});
+		renderWord(validatedWord, 300);
 	}
 };
 
-startBtn.addEventListener('click', async () => {
-	[input, enterBtn, backspace, ...keyboard].forEach(key => {
-		key.removeAttribute('disabled');
+function disableEscapeKey() {
+	if (event.key === 'Escape') {
+		event.preventDefault();
+	}
+}
+
+function renderWord(word, timeout) {
+	let newGuessWord = document.createElement('div');
+	newGuessWord.classList.add('guess-word');
+	output.appendChild(newGuessWord);
+	word.forEach((letter, index) => {
+		setTimeout(function () {
+			let newLetter = document.createElement('div');
+			addClasses(letter, newLetter);
+			newLetter.innerText = letter.letter;
+			newGuessWord.appendChild(newLetter);
+			output.scrollTop = output.scrollHeight;
+		}, index * timeout);
 	});
+}
+
+async function restartGame() {
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
-	word = await getWord();
+	await getWord();
 	console.log(word);
 	input.focus();
+}
+
+startBtn.addEventListener('click', () => {
+	enableButtons();
+	restartGame();
 });
 
 keyboard.forEach(key => {
@@ -139,8 +171,7 @@ document.addEventListener('keydown', function (event) {
 
 document.addEventListener('keydown', function (event) {
 	let key = event.key.toLowerCase();
-	let button = document.getElementById(key + '-btn');
-
+	let button = getElement(key + '-btn');
 	if (button) {
 		button.classList.add('pressed');
 
@@ -150,3 +181,85 @@ document.addEventListener('keydown', function (event) {
 		}, 200);
 	}
 });
+
+document.addEventListener('click', function (event) {
+	let button = event.target;
+	if (button) {
+		button.classList.add('pressed');
+
+		// Remove the class after the animation has completed
+		setTimeout(function () {
+			button.classList.remove('pressed');
+		}, 200);
+	}
+});
+
+instructionsBtn.addEventListener('click', function () {
+	instructionsDialog.classList.add('show');
+});
+
+closeInstructionsBtn.addEventListener('click', function () {
+	instructionsDialog.classList.remove('show');
+});
+
+closeSuccessBtn.addEventListener('click', function () {
+	disableButtons();
+	document.removeEventListener('keydown', disableEscapeKey);
+	successDialog.close();
+});
+
+playAgainBtn.addEventListener('click', function () {
+	restartGame();
+	document.removeEventListener('keydown', disableEscapeKey);
+	successDialog.close();
+});
+
+function isMobileDevice() {
+	const isMobile = typeof window.orientation !== 'undefined' || navigator.userAgent.indexOf('IEMobile') !== -1;
+	if (isMobile) {
+		input.setAttribute('readonly', 'readonly');
+	} else {
+		input.removeAttribute('readonly');
+	}
+}
+
+function disableButtons() {
+	[input, enterBtn, backspace, ...keyboard].forEach(key => {
+		key.setAttribute('disabled', 'disabled');
+	});
+}
+
+function enableButtons() {
+	[input, enterBtn, backspace, ...keyboard].forEach(key => {
+		key.removeAttribute('disabled');
+	});
+}
+
+function loadFromLocalStorage() {
+	const loadedWord = localStorage.getItem('diffle-word');
+	if (loadedWord) {
+		word = loadedWord;
+		enableButtons();
+	}
+
+	const loadedInput = localStorage.getItem('diffle-input');
+	if (loadedInput) {
+		const loadedWords = JSON.parse(loadedInput);
+		guessWords = loadedWords;
+		input.value = '';
+		loadedWords.forEach(word => {
+			renderWord(word, 0);
+		});
+	}
+}
+
+function setOutputMaxHeight() {
+	const keyboardHeight = getElement('input-keyboard-wrapper').offsetHeight;
+	output.style.maxHeight = `calc(100vh - ${keyboardHeight + 60}px)`;
+}
+
+(function init() {
+	isMobileDevice();
+	setOutputMaxHeight();
+	loadFromLocalStorage();
+})();
