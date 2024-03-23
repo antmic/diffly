@@ -25,7 +25,7 @@ let guessWords = [];
 
 async function getWord() {
 	try {
-		const response = await fetch('http://localhost:3000/getword');
+		const response = await fetch('http://[2a09:8280:1::2f:fe8:0]:3000/getword');
 		const data = await response.json();
 		console.log('Success:', data.word);
 		const result = data.word.toLowerCase();
@@ -38,7 +38,7 @@ async function getWord() {
 
 async function checkWord(inputWord) {
 	try {
-		const response = await fetch('http://localhost:3000/checkword', {
+		const response = await fetch('http://[2a09:8280:1::2f:fe8:0]:3000/checkword', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
