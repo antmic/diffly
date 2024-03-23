@@ -16,6 +16,9 @@ const closeInstructionsBtn = getElement('close-instructions-btn');
 const successDialog = getElement('success-dialog');
 const playAgainBtn = getElement('play-again-btn');
 const closeSuccessBtn = getElement('close-success-btn');
+const infoDialog = getElement('info-dialog');
+const closeInfoBtn = getElement('close-info-btn');
+const infoBtn = getElement('info-btn');
 
 let word = '';
 let guessWords = [];
@@ -200,6 +203,14 @@ instructionsBtn.addEventListener('click', function () {
 
 closeInstructionsBtn.addEventListener('click', function () {
 	instructionsDialog.classList.remove('show');
+});
+
+infoBtn.addEventListener('click', function () {
+	infoDialog.classList.add('show');
+});
+
+closeInfoBtn.addEventListener('click', function () {
+	infoDialog.classList.remove('show');
 });
 
 closeSuccessBtn.addEventListener('click', function () {

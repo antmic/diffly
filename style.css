@@ -32,8 +32,7 @@ body {
       box-shadow: none; }
     @media (min-width: 768px) {
       body button:not(:disabled):hover {
-        cursor: pointer;
-        box-shadow: none; } }
+        cursor: pointer; } }
   body .modal {
     position: fixed;
     top: 0;
@@ -42,6 +41,7 @@ body {
     padding: 20px;
     margin: 20px auto;
     border: 1px solid #000;
+    border-radius: 40px;
     width: 90%;
     max-width: 400px;
     margin: 10px auto;
@@ -65,8 +65,12 @@ body {
         padding: 10px 20px; }
       body .modal .button-wrapper .close-btn {
         background-color: #ffb3ba; }
+        body .modal .button-wrapper .close-btn:hover {
+          background-color: #ff808c; }
       body .modal .button-wrapper .play-again-btn {
         background-color: #baffc9; }
+        body .modal .button-wrapper .play-again-btn:hover {
+          background-color: #87ffa1; }
   body .dialog {
     position: fixed;
     top: 0;
@@ -75,12 +79,13 @@ body {
     padding: 20px;
     margin: 20px auto;
     border: 1px solid #000;
+    border-radius: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     z-index: 1;
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-120%);
+    transform: translateX(-160%);
     max-width: 90%; }
     body .dialog.show {
       transform: translateX(0); }
@@ -94,18 +99,30 @@ body {
       gap: 30px; }
       body .dialog .instruction-point img {
         height: 50px; }
+    body .dialog a {
+      color: #9b557d;
+      text-decoration: none;
+      font-weight: 700; }
     body .dialog button {
       padding: 10px 20px; }
+      body .dialog button:hover {
+        background-color: #d4f7dc; }
   body .header {
     display: flex;
     width: 100%;
     position: fixed;
     justify-content: space-around; }
-    body .header h1 {
-      margin: 0;
-      color: #9b557d; }
+    body .header .logo {
+      display: flex;
+      align-items: center;
+      gap: 5px; }
+      body .header .logo h1 {
+        margin: 0;
+        color: #ba54d9; }
     body .header button {
       padding: 10px 20px; }
+      body .header button:hover {
+        background-color: #d4f7dc; }
   body .output {
     margin: 20px;
     max-height: 44vh;
@@ -199,6 +216,8 @@ body {
           border: 2px solid black; }
       body .input-keyboard-wrapper .input-wrapper .enter-btn {
         width: 30%; }
+        body .input-keyboard-wrapper .input-wrapper .enter-btn:hover {
+          background-color: #d4f7dc; }
     body .input-keyboard-wrapper .keyboard {
       display: flex;
       flex-direction: column;
@@ -303,12 +322,9 @@ body {
           max-width: 50px;
           height: 50px;
           margin: 1vw;
-          border: 1px solid #000000;
           border-radius: 5px;
           font-size: 20px;
-          background-color: #ffc8e7;
-          box-shadow: 2px 2px 5px 2px gray;
-          transition: all 0.3s ease-in-out; }
+          background-color: #ffc8e7; }
           body .input-keyboard-wrapper .keyboard .keyboard-latin .key:not(:disabled):hover,
           body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn:not(:disabled):hover,
           body .input-keyboard-wrapper .keyboard .keyboard-polish .key:not(:disabled):hover,

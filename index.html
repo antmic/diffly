@@ -5,7 +5,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script type="module" src="./index.js" defer></script>
 		<link rel="stylesheet" href="./style.css" />
-		<title>Diffle</title>
+		<link rel="icon" href="./images/favicon.png" />
+		<title>Wordly</title>
 	</head>
 	<body>
 		<dialog id="success-dialog" class="modal">
@@ -17,7 +18,7 @@
 				<button id="close-success-btn" class="close-btn" title="zamknij">Zamknij</button>
 			</div>
 		</dialog>
-		<dialog id="instructions-dialog" class="dialog">
+		<dialog id="instructions-dialog" class="dialog instructions-dialog">
 			<div class="instruction-point">
 				<img src="./images/letter-gray.webp" alt="szara litera" />
 				<span>Szary kolor oznacza, że litera nie występuje w szukanym słowie.</span>
@@ -49,8 +50,28 @@
 			</div>
 			<button id="close-instructions-btn" class="close-btn" title="zamknij">Zamknij</button>
 		</dialog>
+		<dialog id="info-dialog" class="dialog info-dialog">
+			<p>
+				Repozytoria projektu dostępne są na GitHubie:
+				<a href="https://github.com/antmic/Diffle-FE" target="_blank">FE</a> i
+				<a href="https://github.com/antmic/Diffle-BE" target="_blank">BE</a>.
+			</p>
+			<p>
+				Gra korzysta ze słowników <a target="_blank" href="https://sjp.pl/slownik/growy/">SJP.pl</a> i
+				<a href="https://freedict.org" target="_blank">freedict.org</a>.
+			</p>
+			<p>
+				Logo i favicon <a target="_blank" href="https://icons8.com/icon/h4Ly5RazDdvK/puzzle">Puzzle</a> pochodzą z
+				<a target="_blank" href="https://icons8.com">Icons8</a>.
+			</p>
+			<button id="close-info-btn" class="close-btn" title="zamknij">Zamknij</button>
+		</dialog>
 		<div class="header">
-			<h1>Diffle</h1>
+			<div class="logo">
+				<img src="./images/logo.svg" alt="logo" />
+				<h1>Wordly</h1>
+			</div>
+			<button id="info-btn" class="info-btn" title="informacje">Info</button>
 			<button id="instructions-btn" class="instructions-btn" title="instrukcja">Instrukcja</button>
 			<button id="start-btn" class="start-btn" title="rozpocznij">Rozpocznij!</button>
 		</div>

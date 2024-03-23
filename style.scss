@@ -6,9 +6,10 @@ $green: #baffc9;
 $blue: #bae1ff;
 $red: #ffb3ba;
 $pink: #ffc8e7;
-$purple: #c6b3ff;
+$purple: #ba54d9;
 $lightpink: #ffeff3;
 $darkpink: #9b557d;
+$lightgreen: #d4f7dc;
 
 $bgc: $lightpink;
 $btn-color: $pink;
@@ -30,7 +31,6 @@ $btn-color: $pink;
 	@media (min-width: 768px) {
 		&:not(:disabled):hover {
 			cursor: pointer;
-			box-shadow: none;
 		}
 	}
 }
@@ -43,6 +43,7 @@ $btn-color: $pink;
 	padding: 20px;
 	margin: 20px auto;
 	border: 1px solid #000;
+	border-radius: 40px;
 }
 
 @keyframes drop {
@@ -116,10 +117,16 @@ body {
 
 			.close-btn {
 				background-color: $red;
+				&:hover {
+					background-color: darken($color: $red, $amount: 10%);
+				}
 			}
 
 			.play-again-btn {
 				background-color: $green;
+				&:hover {
+					background-color: darken($color: $green, $amount: 10%);
+				}
 			}
 		}
 	}
@@ -131,7 +138,7 @@ body {
 		align-items: center;
 		z-index: 1;
 		transition: transform 0.3s ease-in-out;
-		transform: translateX(-120%);
+		transform: translateX(-160%);
 		max-width: 90%;
 
 		&.show {
@@ -154,8 +161,17 @@ body {
 			}
 		}
 
+		a {
+			color: $darkpink;
+			text-decoration: none;
+			font-weight: 700;
+		}
+
 		button {
 			padding: 10px 20px;
+			&:hover {
+				background-color: $lightgreen;
+			}
 		}
 	}
 
@@ -165,13 +181,22 @@ body {
 		position: fixed;
 		justify-content: space-around;
 
-		h1 {
-			margin: 0;
-			color: $darkpink;
+		.logo {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+
+			h1 {
+				margin: 0;
+				color: $purple;
+			}
 		}
 
 		button {
 			padding: 10px 20px;
+			&:hover {
+				background-color: $lightgreen;
+			}
 		}
 	}
 	.output {
@@ -290,6 +315,10 @@ body {
 
 			.enter-btn {
 				width: 30%;
+
+				&:hover {
+					background-color: $lightgreen;
+				}
 			}
 		}
 
@@ -402,12 +431,9 @@ body {
 					max-width: 50px;
 					height: 50px;
 					margin: 1vw;
-					border: 1px solid $black;
 					border-radius: 5px;
 					font-size: 20px;
 					background-color: $pink;
-					box-shadow: 2px 2px 5px 2px gray;
-					transition: all 0.3s ease-in-out;
 
 					&:not(:disabled):hover {
 						background-color: darken($color: $pink, $amount: 10%);
