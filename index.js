@@ -4,6 +4,7 @@ function getElement(id) {
 	return document.getElementById(id);
 }
 
+// elements
 const startBtn = getElement('start-btn');
 const enterBtn = getElement('enter-btn');
 const input = getElement('input');
@@ -19,10 +20,23 @@ const closeSuccessBtn = getElement('close-success-btn');
 const infoDialog = getElement('info-dialog');
 const closeInfoBtn = getElement('close-info-btn');
 const infoBtn = getElement('info-btn');
+const buttons = [
+	enterBtn,
+	startBtn,
+	instructionsBtn,
+	closeInstructionsBtn,
+	playAgainBtn,
+	closeSuccessBtn,
+	infoBtn,
+	closeInfoBtn,
+	backspace,
+	...keyboard,
+];
 
 let word = '';
 let guessWords = [];
 
+// functions
 async function getWord() {
 	try {
 		const response = await fetch('http://[2a09:8280:1::2f:fe8:0]:3000/getword');
@@ -83,22 +97,11 @@ const addClasses = (letter, newLetter) => {
 };
 
 const clearClasses = () => {
-	// get all elements with class 'key' and remove all classes except 'key'
 	const keys = Array.from(document.getElementsByClassName('key'));
 	keys.forEach(key => {
 		key.className = 'key';
 	});
 };
-
-enterBtn.addEventListener('click', async () => {
-	const isWordInDict = await checkWord(input.value);
-	if (isWordInDict.message) {
-		console.log(word);
-		validate(word);
-	} else {
-		alert('Słowo nie występuje w słowniku!');
-	}
-});
 
 const validate = async word => {
 	let validatedWord = validator(input.value, word);
@@ -147,83 +150,8 @@ async function restartGame() {
 	output.innerHTML = '';
 	clearClasses();
 	await getWord();
-	console.log(word);
 	input.focus();
 }
-
-startBtn.addEventListener('click', () => {
-	enableButtons();
-	restartGame();
-});
-
-keyboard.forEach(key => {
-	key.addEventListener('click', () => {
-		input.value += key.innerText;
-	});
-});
-
-backspace.addEventListener('click', () => {
-	input.value = input.value.slice(0, -1);
-});
-
-document.addEventListener('keydown', function (event) {
-	if (event.key === 'Enter') {
-		document.querySelector('.enter-btn').click();
-	}
-});
-
-document.addEventListener('keydown', function (event) {
-	let key = event.key.toLowerCase();
-	let button = getElement(key + '-btn');
-	if (button) {
-		button.classList.add('pressed');
-
-		// Remove the class after the animation has completed
-		setTimeout(function () {
-			button.classList.remove('pressed');
-		}, 200);
-	}
-});
-
-document.addEventListener('click', function (event) {
-	let button = event.target;
-	if (button) {
-		button.classList.add('pressed');
-
-		// Remove the class after the animation has completed
-		setTimeout(function () {
-			button.classList.remove('pressed');
-		}, 200);
-	}
-});
-
-instructionsBtn.addEventListener('click', function () {
-	instructionsDialog.classList.add('show');
-});
-
-closeInstructionsBtn.addEventListener('click', function () {
-	instructionsDialog.classList.remove('show');
-});
-
-infoBtn.addEventListener('click', function () {
-	infoDialog.classList.add('show');
-});
-
-closeInfoBtn.addEventListener('click', function () {
-	infoDialog.classList.remove('show');
-});
-
-closeSuccessBtn.addEventListener('click', function () {
-	disableButtons();
-	document.removeEventListener('keydown', disableEscapeKey);
-	successDialog.close();
-});
-
-playAgainBtn.addEventListener('click', function () {
-	restartGame();
-	document.removeEventListener('keydown', disableEscapeKey);
-	successDialog.close();
-});
 
 function isMobileDevice() {
 	const isMobile = typeof window.orientation !== 'undefined' || navigator.userAgent.indexOf('IEMobile') !== -1;
@@ -269,8 +197,100 @@ function setOutputMaxHeight() {
 	output.style.maxHeight = `calc(100vh - ${keyboardHeight + 60}px)`;
 }
 
+// self-calling init function
 (function init() {
 	isMobileDevice();
 	setOutputMaxHeight();
 	loadFromLocalStorage();
 })();
+
+// event listeners
+enterBtn.addEventListener('click', async () => {
+	if (!input.value) {
+		return;
+	}
+	const isWordInDict = await checkWord(input.value);
+	if (isWordInDict.message) {
+		validate(word);
+	} else {
+		const dialog = getElement('error-dialog');
+		getElement('error-word').innerText = input.value;
+		dialog.showModal();
+		setTimeout(() => {
+			dialog.close();
+		}, 2000);
+	}
+	input.focus();
+});
+
+startBtn.addEventListener('click', () => {
+	enableButtons();
+	restartGame();
+});
+
+keyboard.forEach(key => {
+	key.addEventListener('click', () => {
+		input.value += key.innerText;
+	});
+});
+
+backspace.addEventListener('click', () => {
+	input.value = input.value.slice(0, -1);
+});
+
+document.addEventListener('keydown', function (event) {
+	if (event.key === 'Enter') {
+		document.querySelector('.enter-btn').click();
+	}
+});
+
+document.addEventListener('keydown', function (event) {
+	let key = event.key.toLowerCase();
+	let button = getElement(key + '-btn');
+	if (button) {
+		button.classList.add('pressed');
+		setTimeout(function () {
+			button.classList.remove('pressed');
+		}, 200);
+	}
+});
+
+buttons.forEach(btn => {
+	btn.addEventListener('click', event => {
+		const button = event.target;
+		if (button) {
+			button.classList.add('pressed');
+			setTimeout(function () {
+				button.classList.remove('pressed');
+			}, 200);
+		}
+	});
+});
+
+instructionsBtn.addEventListener('click', function () {
+	instructionsDialog.classList.add('show');
+});
+
+closeInstructionsBtn.addEventListener('click', function () {
+	instructionsDialog.classList.remove('show');
+});
+
+infoBtn.addEventListener('click', function () {
+	infoDialog.classList.add('show');
+});
+
+closeInfoBtn.addEventListener('click', function () {
+	infoDialog.classList.remove('show');
+});
+
+closeSuccessBtn.addEventListener('click', function () {
+	disableButtons();
+	document.removeEventListener('keydown', disableEscapeKey);
+	successDialog.close();
+});
+
+playAgainBtn.addEventListener('click', function () {
+	restartGame();
+	document.removeEventListener('keydown', disableEscapeKey);
+	successDialog.close();
+});
