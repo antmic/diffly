@@ -255,7 +255,7 @@ document.addEventListener('keydown', function (event) {
 });
 
 document.addEventListener('keydown', function (event) {
-	let key = event.key.toLowerCase();
+	let key = event.key?.toLowerCase();
 	let button = getElement(key + '-btn');
 	if (button) {
 		button.classList.add('pressed');
