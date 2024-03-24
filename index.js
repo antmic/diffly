@@ -16,22 +16,26 @@ const instructionsBtn = getElement('instructions-btn');
 const closeInstructionsBtn = getElement('close-instructions-btn');
 const successDialog = getElement('success-dialog');
 const playAgainBtn = getElement('play-again-btn');
-const closeSuccessBtn = getElement('close-success-btn');
 const infoDialog = getElement('info-dialog');
 const closeInfoBtn = getElement('close-info-btn');
 const infoBtn = getElement('info-btn');
+const errorDialog = getElement('error-dialog');
+const errorText = getElement('error-text');
 const buttons = [
 	enterBtn,
 	startBtn,
 	instructionsBtn,
 	closeInstructionsBtn,
 	playAgainBtn,
-	closeSuccessBtn,
 	infoBtn,
 	closeInfoBtn,
 	backspace,
 	...keyboard,
 ];
+
+const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+const renderTimeout = 300;
+const errorTimeout = 2000;
 
 let word = '';
 let guessWords = [];
@@ -39,7 +43,7 @@ let guessWords = [];
 // functions
 async function getWord() {
 	try {
-		const response = await fetch('http://[2a09:8280:1::2f:fe8:0]:3000/getword');
+		const response = await fetch(serverUrl + '/getword');
 		const data = await response.json();
 		console.log('Success:', data.word);
 		const result = data.word.toLowerCase();
@@ -47,12 +51,14 @@ async function getWord() {
 		word = result;
 	} catch (error) {
 		console.error('Error:', error);
+		errorText.innerText = 'Przepraszam, wystąpił błąd podczas pobierania słowa!';
+		errorDialog.showModal();
 	}
 }
 
 async function checkWord(inputWord) {
 	try {
-		const response = await fetch('http://[2a09:8280:1::2f:fe8:0]:3000/checkword', {
+		const response = await fetch(serverUrl + '/checkword', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -62,6 +68,8 @@ async function checkWord(inputWord) {
 		return response.json();
 	} catch (error) {
 		console.error('Error:', error);
+		errorText.innerText = 'Przepraszam, wystąpił błąd podczas sprawdzania słowa!';
+		errorDialog.showModal();
 	}
 }
 
@@ -104,23 +112,25 @@ const clearClasses = () => {
 };
 
 const validate = async word => {
-	let validatedWord = validator(input.value, word);
+	const guess = input.value.toLowerCase();
+	const validatedWord = validator(guess, word);
 	guessWords.push(validatedWord);
 	localStorage.setItem('diffle-input', JSON.stringify(guessWords));
 	console.log('validatedWord: ', validatedWord);
 	input.value = '';
-	if (validatedWord === word) {
-		const dialog = getElement('success-dialog');
-		dialog.showModal();
-		getElement('password').innerText = word;
-		output.innerHTML = '';
-		guessWords = [];
-		localStorage.removeItem('diffle-word');
-		localStorage.removeItem('diffle-input');
-		clearClasses();
-		document.addEventListener('keydown', disableEscapeKey);
-	} else {
-		renderWord(validatedWord, 300);
+	renderWord(validatedWord, renderTimeout);
+	if (guess === word) {
+		setTimeout(() => {
+			const dialog = getElement('success-dialog');
+			dialog.showModal();
+			getElement('password').innerText = word;
+			output.innerHTML = '';
+			guessWords = [];
+			localStorage.removeItem('diffle-word');
+			localStorage.removeItem('diffle-input');
+			clearClasses();
+			document.addEventListener('keydown', disableEscapeKey);
+		}, word.length * renderTimeout + 1000);
 	}
 };
 
@@ -146,6 +156,8 @@ function renderWord(word, timeout) {
 }
 
 async function restartGame() {
+	localStorage.removeItem('diffle-word');
+	localStorage.removeItem('diffle-input');
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
@@ -179,6 +191,9 @@ function loadFromLocalStorage() {
 	if (loadedWord) {
 		word = loadedWord;
 		enableButtons();
+	} else {
+		enableButtons();
+		restartGame();
 	}
 
 	const loadedInput = localStorage.getItem('diffle-input');
@@ -189,6 +204,9 @@ function loadFromLocalStorage() {
 		loadedWords.forEach(word => {
 			renderWord(word, 0);
 		});
+	} else {
+		enableButtons();
+		restartGame();
 	}
 }
 
@@ -213,12 +231,12 @@ enterBtn.addEventListener('click', async () => {
 	if (isWordInDict.message) {
 		validate(word);
 	} else {
-		const dialog = getElement('error-dialog');
+		errorText.innerHTML = '<p>Słowo "<span id="error-word"></span>" nie występuje w słowniku!</p>';
 		getElement('error-word').innerText = input.value;
-		dialog.showModal();
+		errorDialog.showModal();
 		setTimeout(() => {
 			dialog.close();
-		}, 2000);
+		}, errorTimeout);
 	}
 	input.focus();
 });
@@ -281,12 +299,6 @@ infoBtn.addEventListener('click', function () {
 
 closeInfoBtn.addEventListener('click', function () {
 	infoDialog.classList.remove('show');
-});
-
-closeSuccessBtn.addEventListener('click', function () {
-	disableButtons();
-	document.removeEventListener('keydown', disableEscapeKey);
-	successDialog.close();
 });
 
 playAgainBtn.addEventListener('click', function () {

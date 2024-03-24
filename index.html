@@ -6,11 +6,11 @@
 		<script type="module" src="./index.js" defer></script>
 		<link rel="stylesheet" href="./style.css" />
 		<link rel="icon" href="./images/favicon.png" />
-		<title>Wordly</title>
+		<title>Diffly</title>
 	</head>
 	<body>
 		<dialog id="error-dialog" class="modal">
-			<p>Słowo "<span id="error-word"></span>" nie występuje w słowniku!</p>
+			<p id="error-text"></p>
 		</dialog>
 		<dialog id="success-dialog" class="modal">
 			<h2>Gratulacje!</h2>
@@ -18,7 +18,6 @@
 			<p class="password" id="password"></p>
 			<div class="button-wrapper">
 				<button id="play-again-btn" class="play-again-btn" title="zagraj ponownie">Zagraj ponownie</button>
-				<button id="close-success-btn" class="close-btn" title="zamknij">Zamknij</button>
 			</div>
 		</dialog>
 		<dialog id="instructions-dialog" class="dialog instructions-dialog">
@@ -54,6 +53,8 @@
 			<button id="close-instructions-btn" class="close-btn" title="zamknij">Zamknij</button>
 		</dialog>
 		<dialog id="info-dialog" class="dialog info-dialog">
+			<p>Diffly to gra polegająca na odgadywaniu słów.</p>
+			<p>Jest oparta na lekko zmodyfikowanych zasadach gry Diffle.</p>
 			<p>
 				Repozytoria projektu dostępne są na GitHubie:
 				<a href="https://github.com/antmic/Diffle-FE" target="_blank">FE</a> i
@@ -72,11 +73,11 @@
 		<div class="header">
 			<div class="logo">
 				<img src="./images/logo.svg" alt="logo" />
-				<h1>Wordly</h1>
+				<h1>Diffly</h1>
 			</div>
 			<button id="info-btn" class="info-btn" title="informacje">Info</button>
 			<button id="instructions-btn" class="instructions-btn" title="instrukcja">Instrukcja</button>
-			<button id="start-btn" class="start-btn" title="rozpocznij">Rozpocznij!</button>
+			<button id="start-btn" class="start-btn" title="rozpocznij">Reset!</button>
 		</div>
 		<div id="output" class="output"></div>
 		<div id="input-keyboard-wrapper" class="input-keyboard-wrapper">
