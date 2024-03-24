@@ -33,7 +33,8 @@ const buttons = [
 	...keyboard,
 ];
 
-const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+//const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+const serverUrl = 'http://localhost:3000';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
@@ -45,7 +46,6 @@ async function getWord() {
 	try {
 		const response = await fetch(serverUrl + '/getword');
 		const data = await response.json();
-		console.log('Success:', data.word);
 		const result = data.word.toLowerCase();
 		localStorage.setItem('diffle-word', result);
 		word = result;
@@ -63,7 +63,7 @@ async function checkWord(inputWord) {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(inputWord),
+			body: JSON.stringify({ word: inputWord }),
 		});
 		return response.json();
 	} catch (error) {
@@ -116,7 +116,6 @@ const validate = async word => {
 	const validatedWord = validator(guess, word);
 	guessWords.push(validatedWord);
 	localStorage.setItem('diffle-input', JSON.stringify(guessWords));
-	console.log('validatedWord: ', validatedWord);
 	input.value = '';
 	renderWord(validatedWord, renderTimeout);
 	if (guess === word) {
@@ -174,12 +173,6 @@ function isMobileDevice() {
 	}
 }
 
-function disableButtons() {
-	[input, enterBtn, backspace, ...keyboard].forEach(key => {
-		key.setAttribute('disabled', 'disabled');
-	});
-}
-
 function enableButtons() {
 	[input, enterBtn, backspace, ...keyboard].forEach(key => {
 		key.removeAttribute('disabled');
@@ -235,7 +228,7 @@ enterBtn.addEventListener('click', async () => {
 		getElement('error-word').innerText = input.value;
 		errorDialog.showModal();
 		setTimeout(() => {
-			dialog.close();
+			errorDialog.close();
 		}, errorTimeout);
 	}
 	input.focus();
