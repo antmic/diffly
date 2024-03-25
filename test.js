@@ -1,12 +1,14 @@
 import { validator } from './validator.js';
 
 const testCases = [
-	{ input: 'fantastyka', word: 'migotać' },
+	// { input: 'fantastyka', word: 'migotać' },
 	{ input: 'trelee', word: 'bambetle' },
-	{ input: 'ale', word: 'bambetle' },
-	{ input: 'pajac', word: 'trajan' },
-	{ input: 'klaskała', word: 'ekierka' },
+	// { input: 'ale', word: 'bambetle' },
+	// { input: 'pajac', word: 'trajan' },
+	// { input: 'klaskała', word: 'ekierka' },
 	{ input: 'pingwin', word: 'pininfarina' },
+	{ input: 'ciocikawskaci', word: 'cimcietka' },
+	{ input: 'ciekawska', word: 'metka' },
 ];
 
 testCases.forEach(testCase => {
@@ -44,6 +46,7 @@ testCases.forEach(testCase => {
 			show.push(element.letter);
 		}
 	});
+	console.log(testCase.word);
 	console.log(show.join(''));
 	//console.log(result);
 });

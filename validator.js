@@ -97,6 +97,39 @@ export const validator = (input, word) => {
 		}
 	}
 
+	const getAllSubstrings = (input, word, hide) => {
+		let useHide = hide;
+		let substrings = [];
+		let newInput = input.slice();
+		let newWord = word.slice();
+		(function _getAllSubstrings() {
+			let substr1 = longestCommonSubstring(newInput, newWord);
+			newInput = newInput.replace(substr1, '');
+			if (useHide) {
+				newWord = newWord.replace(substr1, '');
+			}
+			if (substr1.length <= 1) {
+				return;
+			} else {
+				substrings.push(substr1);
+				_getAllSubstrings();
+			}
+		})();
+		return substrings;
+	};
+
+	const getAllMatches = (string, substring) => {
+		let result = [];
+		const windowSize = substring.length;
+		for (let i = 0; i < string.length - windowSize + 1; i++) {
+			let window = string.slice(i, i + windowSize);
+			if (window === substring) {
+				result.push([i, i + windowSize]);
+			}
+		}
+		return result;
+	};
+
 	function getSequences() {
 		resultArr.forEach(element => {
 			const nextLetter = resultArr[element.index + 1]?.letter;
@@ -112,47 +145,79 @@ export const validator = (input, word) => {
 			});
 		});
 
-		let substrings = [];
-		let newInput = input.slice();
-		let newWord = word.slice();
-		(function getAllSubstrings() {
-			let substr1 = longestCommonSubstring(newInput, newWord);
-			newInput = newInput.replace(substr1, '');
-			newWord = newWord.replace(substr1, '');
-			if (substr1.length <= 1) {
-				return;
-			} else {
-				substrings.push(substr1);
-				getAllSubstrings();
-			}
-		})();
+		let substrings = getAllSubstrings(input, word, false);
 
-		let localInput = input.slice();
-		let indices = [];
+		let uniqueSubstrings = Array.from(new Set(substrings));
 
-		substrings.forEach((substring, i) => {
-			indices.push(matchStrings(localInput, substring));
-			localInput = hideSubstring(localInput, indices[i][0], indices[i][1]);
+		let substringsInInput = new Map();
+		uniqueSubstrings.forEach(substring => {
+			substringsInInput.set(substring, new Map());
+			substringsInInput.get(substring).set('indices', getAllMatches(input, substring));
+			substringsInInput.get(substring).set('length', getAllMatches(input, substring).length);
 		});
 
-		indices.forEach(index => {
-			let range = Array.from({ length: index[1] - index[0] }, (_, i) => i + index[0]);
-			if (range.length > 1) {
-				range.forEach((index, i) => {
-					if (i === 0) {
-						resultArr[index].isFirstInSequence = true;
-						resultArr[index].isInSequence = true;
-						resultArr[index].priority += 2;
-					} else if (i === range.length - 1) {
-						resultArr[index].isLastInSequence = true;
-						resultArr[index].isInSequence = true;
-						resultArr[index].priority += 2;
-					} else {
-						resultArr[index].isInSequence = true;
-						resultArr[index].priority += 2;
-					}
-				});
-			}
+		let substringsInWord = new Map();
+		uniqueSubstrings.forEach(substring => {
+			substringsInWord.set(substring, new Map());
+			substringsInWord.get(substring).set('indices', getAllMatches(word, substring));
+			substringsInWord.get(substring).set('length', getAllMatches(word, substring).length);
+		});
+
+		let chosenIndices = [];
+		substringsInWord.forEach((value, key) => {
+			let maxNumberOfMatches = Math.min(
+				substringsInWord.get(key).get('length'),
+				substringsInInput.get(key).get('length')
+			);
+
+			let indicesArr = substringsInInput.get(key).get('indices');
+
+			let ranges = [];
+			indicesArr.forEach(index => {
+				let range = Array.from({ length: index[1] - index[0] }, (_, i) => i + index[0]);
+				if (range.length > 1) {
+					let prioritySum = 0;
+					range.forEach((index, i) => {
+						prioritySum += resultArr[index].priority;
+					});
+					ranges.push(
+						new Map([
+							['range', range],
+							['prioritySum', prioritySum],
+						])
+					);
+				}
+			});
+
+			let topNMatches = ranges.sort((a, b) => {
+				return b.get('prioritySum') - a.get('prioritySum');
+			});
+
+			let chosenMatches = topNMatches.slice(0, maxNumberOfMatches);
+			chosenMatches.forEach(match => {
+				chosenIndices.push(match.get('range'));
+			});
+		});
+		console.log('chosenIndices');
+		console.log(chosenIndices);
+
+		//todo: check if chosenIndices are overlapping
+
+		chosenIndices.forEach(element => {
+			element.forEach((index, i) => {
+				if (i === 0) {
+					resultArr[index].isFirstInSequence = true;
+					resultArr[index].isInSequence = true;
+					resultArr[index].priority += 2;
+				} else if (i === element.length - 1) {
+					resultArr[index].isLastInSequence = true;
+					resultArr[index].isInSequence = true;
+					resultArr[index].priority += 2;
+				} else {
+					resultArr[index].isInSequence = true;
+					resultArr[index].priority += 2;
+				}
+			});
 		});
 	}
 
@@ -196,10 +261,10 @@ export const validator = (input, word) => {
 	populateResultArr();
 	const possibleLetters = getPossibleLetters();
 	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters);
-	getSequences();
 	checkFirstLetter();
 	checkLastLetter();
-	getUsedLetters();
 	checkOrder();
+	getSequences();
+	getUsedLetters();
 	return resultArr;
 };
