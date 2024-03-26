@@ -157,25 +157,27 @@ body {
 		align-items: center;
 		transition: transform 0.3s ease-in-out;
 		transform: translateX(-100vw);
+		text-align: center;
 
 		&.show {
 			transform: translateX(0);
 		}
 
-		> * {
-			margin: 10px;
+		&.info-dialog {
+			img {
+				height: 12px;
+			}
+			.logo-text {
+				color: $purple;
+			}
 		}
 
-		.instruction-point {
-			display: flex;
-			align-items: center;
-			justify-content: flex-start;
-			width: 100%;
-			gap: 30px;
+		&.instructions-dialog {
+			font-size: 14px;
+		}
 
-			img {
-				height: 50px;
-			}
+		> * {
+			margin: 10px;
 		}
 
 		a {
@@ -188,14 +190,30 @@ body {
 			padding: 10px 20px;
 			@include key-hover($lightgreen);
 		}
+
+		.instruction-point {
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			width: 100%;
+			gap: 30px;
+			text-align: left;
+
+			img {
+				height: 40px;
+			}
+		}
 	}
 
 	header {
 		display: flex;
 		justify-content: space-around;
+		align-items: center;
 		position: fixed;
 		width: 100vw;
+		max-width: 1024px;
 		height: 10vh;
+		max-height: 80px;
 		padding: 10px;
 		z-index: 1;
 
@@ -239,6 +257,7 @@ body {
 		min-height: 45vh;
 		max-height: 45vh; //just in case js doesn't work
 		width: 100vw;
+		max-width: 1024px;
 		padding: 20px 10px;
 		overflow-y: auto;
 		overflow-x: hidden;
@@ -252,14 +271,16 @@ body {
 			.letter {
 				$letter-size: 6vw;
 				$letter-margin: 0.25vw;
-				font-size: 14px;
+				font-size: 3.8vw;
 				line-height: 1.35;
 				font-weight: 500;
 				border: $border;
 				border-radius: 50%;
 				margin: $letter-margin;
 				width: $letter-size;
+				max-width: 50px;
 				height: $letter-size;
+				max-height: 50px;
 				text-align: center;
 				background-color: $gray;
 				animation: drop 0.2s ease;
@@ -304,7 +325,6 @@ body {
 		position: fixed;
 		width: 100vw;
 		max-height: 45vh;
-		min-height: 300px;
 		bottom: 0;
 		padding: 2px 0 20px 0;
 		background-color: $bgc;
@@ -324,7 +344,8 @@ body {
 			display: flex;
 			justify-content: space-around;
 			width: 100%;
-			margin-bottom: 10px;
+			max-width: 768px;
+			margin: 0 auto 10px;
 
 			.input {
 				@include btn-style;
@@ -344,6 +365,13 @@ body {
 			.enter-btn {
 				width: 30%;
 				@include key-hover($lightgreen);
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				img {
+					height: 25px;
+				}
 			}
 		}
 
@@ -453,17 +481,25 @@ body {
 				.key,
 				.backspace-btn {
 					width: 8vw;
-					max-width: 50px;
-					height: 50px;
+					max-width: 60px;
+					height: 8vw;
+					max-height: 60px;
 					margin: 1vw;
 					border-radius: 5px;
 					font-size: 20px;
 					background-color: $pink;
 					@include key-hover($pink);
+				}
 
-					&.backspace-btn {
-						width: 18vw;
-						max-width: 100px;
+				.backspace-btn {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 18vw;
+					max-width: 120px;
+
+					img {
+						height: 35px;
 					}
 				}
 			}
@@ -490,15 +526,28 @@ body {
 
 // tablet
 @media (min-width: 768px) {
-	body {
-		header {
-			button {
-				&.large-view {
-					display: block;
-				}
+}
 
-				&.small-view {
-					display: none;
+// desktop
+@media (min-width: 1024px) {
+	body {
+		.output {
+			.guess-word {
+				.letter {
+					font-size: 32px;
+					margin: 3px;
+				}
+			}
+		}
+		.input-keyboard-wrapper {
+			.keyboard {
+				.keyboard-latin,
+				.keyboard-polish {
+					.key,
+					.backspace-btn {
+						font-size: 20px;
+						margin: 5px;
+					}
 				}
 			}
 		}

@@ -7,6 +7,7 @@ function getElement(id) {
 // elements
 const startBtn = getElement('start-btn');
 const enterBtn = getElement('enter-btn');
+const header = getElement('header');
 const input = getElement('input');
 const output = getElement('output');
 const keyboard = Array.from(document.getElementsByClassName('key'));
@@ -38,12 +39,9 @@ const serverUrl = 'http://localhost:3000';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
-//initialization sequence
 let word = '';
 let guessWords = [];
-let isMobile = isMobileDevice();
-setOutputMaxHeight();
-loadFromLocalStorage();
+let isMobile = false;
 
 // functions
 async function getWord() {
@@ -177,19 +175,11 @@ function isMobileDevice() {
 	}
 }
 
-function enableButtons() {
-	[input, enterBtn, backspace, ...keyboard].forEach(key => {
-		key.removeAttribute('disabled');
-	});
-}
-
 function loadFromLocalStorage() {
 	const loadedWord = localStorage.getItem('diffle-word');
 	if (loadedWord) {
 		word = loadedWord;
-		enableButtons();
 	} else {
-		enableButtons();
 		restartGame();
 	}
 
@@ -202,14 +192,15 @@ function loadFromLocalStorage() {
 			renderWord(word, 0);
 		});
 	} else {
-		enableButtons();
 		restartGame();
 	}
 }
 
 function setOutputMaxHeight() {
 	const keyboardHeight = getElement('input-keyboard-wrapper').offsetHeight;
-	output.style.maxHeight = `calc(90vh - ${keyboardHeight}px)`;
+	const headerHeight = header.offsetHeight;
+	output.style.top = `${headerHeight}px`;
+	output.style.maxHeight = `calc(100vh - ${keyboardHeight}px - ${headerHeight}px)`;
 }
 
 // event listeners
@@ -233,7 +224,6 @@ enterBtn.addEventListener('click', async () => {
 });
 
 startBtn.addEventListener('click', () => {
-	enableButtons();
 	restartGame();
 });
 
@@ -299,3 +289,8 @@ playAgainBtn.addEventListener('click', function () {
 	document.removeEventListener('keydown', disableEscapeKey);
 	successDialog.close();
 });
+
+// init
+isMobile = isMobileDevice();
+setOutputMaxHeight();
+loadFromLocalStorage();

@@ -90,19 +90,18 @@ body {
     flex-direction: column;
     align-items: center;
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-100vw); }
+    transform: translateX(-100vw);
+    text-align: center; }
     body .dialog.show {
       transform: translateX(0); }
+    body .dialog.info-dialog img {
+      height: 12px; }
+    body .dialog.info-dialog .logo-text {
+      color: #ba54d9; }
+    body .dialog.instructions-dialog {
+      font-size: 14px; }
     body .dialog > * {
       margin: 10px; }
-    body .dialog .instruction-point {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      gap: 30px; }
-      body .dialog .instruction-point img {
-        height: 50px; }
     body .dialog a {
       color: #9b557d;
       text-decoration: none;
@@ -113,12 +112,24 @@ body {
         body .dialog button:not(:disabled):hover {
           cursor: pointer;
           background-color: #a9efb9; } }
+    body .dialog .instruction-point {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      gap: 30px;
+      text-align: left; }
+      body .dialog .instruction-point img {
+        height: 40px; }
   body header {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     position: fixed;
     width: 100vw;
+    max-width: 1024px;
     height: 10vh;
+    max-height: 80px;
     padding: 10px;
     z-index: 1; }
     body header:after {
@@ -162,6 +173,7 @@ body {
     min-height: 45vh;
     max-height: 45vh;
     width: 100vw;
+    max-width: 1024px;
     padding: 20px 10px;
     overflow-y: auto;
     overflow-x: hidden; }
@@ -171,14 +183,16 @@ body {
       justify-content: center;
       transition: all 1s ease-in-out; }
       body .output .guess-word .letter {
-        font-size: 14px;
+        font-size: 3.8vw;
         line-height: 1.35;
         font-weight: 500;
         border: 1px solid #333;
         border-radius: 50%;
         margin: 0.25vw;
         width: 6vw;
+        max-width: 50px;
         height: 6vw;
+        max-height: 50px;
         text-align: center;
         background-color: #cccccc;
         animation: drop 0.2s ease; }
@@ -205,7 +219,6 @@ body {
     position: fixed;
     width: 100vw;
     max-height: 45vh;
-    min-height: 300px;
     bottom: 0;
     padding: 2px 0 20px 0;
     background-color: #ffeff3;
@@ -222,7 +235,8 @@ body {
       display: flex;
       justify-content: space-around;
       width: 100%;
-      margin-bottom: 10px; }
+      max-width: 768px;
+      margin: 0 auto 10px; }
       body .input-keyboard-wrapper .input-wrapper .input {
         background-color: #fdd9ee;
         border: 1px solid #333;
@@ -242,11 +256,16 @@ body {
         body .input-keyboard-wrapper .input-wrapper .input:focus-visible {
           border: 2px solid #000000; }
       body .input-keyboard-wrapper .input-wrapper .enter-btn {
-        width: 30%; }
+        width: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center; }
         @media (min-width: 768px) {
           body .input-keyboard-wrapper .input-wrapper .enter-btn:not(:disabled):hover {
             cursor: pointer;
             background-color: #a9efb9; } }
+        body .input-keyboard-wrapper .input-wrapper .enter-btn img {
+          height: 25px; }
     body .input-keyboard-wrapper .keyboard {
       display: flex;
       flex-direction: column;
@@ -348,8 +367,9 @@ body {
         body .input-keyboard-wrapper .keyboard .keyboard-polish .key,
         body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn {
           width: 8vw;
-          max-width: 50px;
-          height: 50px;
+          max-width: 60px;
+          height: 8vw;
+          max-height: 60px;
           margin: 1vw;
           border-radius: 5px;
           font-size: 20px;
@@ -361,12 +381,16 @@ body {
             body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn:not(:disabled):hover {
               cursor: pointer;
               background-color: #faa9d8; } }
-          body .input-keyboard-wrapper .keyboard .keyboard-latin .key.backspace-btn,
-          body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn.backspace-btn,
-          body .input-keyboard-wrapper .keyboard .keyboard-polish .key.backspace-btn,
-          body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn.backspace-btn {
-            width: 18vw;
-            max-width: 100px; }
+        body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn,
+        body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 18vw;
+          max-width: 120px; }
+          body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn img,
+          body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn img {
+            height: 35px; }
       body .input-keyboard-wrapper .keyboard .key.letter {
         background-color: #cccccc; }
         @media (min-width: 768px) {
@@ -380,8 +404,13 @@ body {
             cursor: pointer;
             background-color: #87ffa1; } }
 
-@media (min-width: 768px) {
-  body header button.large-view {
-    display: block; }
-  body header button.small-view {
-    display: none; } }
+@media (min-width: 1024px) {
+  body .output .guess-word .letter {
+    font-size: 32px;
+    margin: 3px; }
+  body .input-keyboard-wrapper .keyboard .keyboard-latin .key,
+  body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn,
+  body .input-keyboard-wrapper .keyboard .keyboard-polish .key,
+  body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn {
+    font-size: 20px;
+    margin: 5px; } }

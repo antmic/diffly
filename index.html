@@ -22,56 +22,62 @@
 		</dialog>
 		<dialog id="instructions-dialog" class="dialog instructions-dialog">
 			<div class="instruction-point">
+				<img src="./images/info.svg" alt="info" />
+				<span>Kształty i kolory liter stanowią wskazówki do odgadnięcia hasła.</span>
+			</div>
+			<div class="instruction-point">
 				<img src="./images/letter-gray.webp" alt="szara litera" />
-				<span>Szary kolor oznacza, że litera nie występuje w szukanym słowie.</span>
+				<span>Błędna litera.</span>
 			</div>
 			<div class="instruction-point">
 				<img src="./images/letter-yellow.webp" alt="żółta litera" />
-				<span>
-					Żółty kolor oznacza, że litera występuje w szukanym słowie, ale nie po poprzedniej zielonej literze.
-				</span>
+				<span> Poprawna litera, ale w błędnej kolejności. </span>
 			</div>
 			<div class="instruction-point">
 				<img src="./images/letter-green.webp" alt="zielona litera" />
-				<span>
-					Zielony kolor oznacza, że jest to poprawna litera i jest w poprawnej kolejności. Pierwsza poprawna litera
-					zawsze będzie zielona.
-				</span>
+				<span> Poprawna litera w poprawnej kolejności. </span>
 			</div>
 			<div class="instruction-point">
 				<img src="./images/letter-first.webp" alt="pierwsza litera" />
-				<span>Jeśli pierwsza litera zgadza się z pierwszą literą hasła, przyjmuje taki kształt.</span>
+				<span>Pierwsza litera hasła.</span>
 			</div>
 			<div class="instruction-point">
 				<img src="./images/letter-last.webp" alt="ostatnia litera" />
-				<span>Jeśli ostatnia litera zgadza się z ostatnią literą hasła, przyjmuje taki kształt.</span>
+				<span>Ostatnia litera hasła.</span>
 			</div>
 			<div class="instruction-point">
 				<img src="./images/letter-double.webp" alt="podwójna litera" />
-				<span>Jeśli litery występują bezpośrednio po sobie, przyjmują taki kształt.</span>
+				<span>Litery występujące bezpośrednio po sobie.</span>
+			</div>
+			<div class="instruction-point">
+				<img src="./images/info.svg" alt="info" />
+				<span>Pierwsza poprawna litera zawsze będzie zielona.</span>
+			</div>
+			<div class="instruction-point">
+				<img src="./images/info.svg" alt="info" />
+				<span>Hasło ma nie mniej niż 5 i nie więcej niż 15 liter.</span>
 			</div>
 			<button id="close-instructions-btn" class="close-btn" title="zamknij">Zamknij</button>
 		</dialog>
 		<dialog id="info-dialog" class="dialog info-dialog">
-			<p>Diffly to gra polegająca na odgadywaniu słów.</p>
-			<p>Jest oparta na lekko zmodyfikowanych zasadach gry Diffle.</p>
+			<p>
+				<img class="logo" src="./images/logo.svg" alt="logo" /> <span class="logo-text">Diffly</span> to gra polegająca
+				na odgadywaniu słów, oparta na lekko zmodyfikowanych zasadach gry Diffle.
+			</p>
 			<p>
 				Repozytoria projektu dostępne są na GitHubie:
-				<a href="https://github.com/antmic/Diffle-FE" target="_blank">FE</a> i
-				<a href="https://github.com/antmic/Diffle-BE" target="_blank">BE</a>.
+				<a href="https://github.com/antmic/Diffle-FE" target="_blank">strona</a> i
+				<a href="https://github.com/antmic/Diffle-BE" target="_blank">serwer</a>.
 			</p>
 			<p>
 				Gra korzysta ze słowników <a target="_blank" href="https://sjp.pl/slownik/growy/">SJP.pl</a> i
 				<a href="https://freedict.org" target="_blank">freedict.org</a>.
 			</p>
-			<p>
-				Logo i favicon <a target="_blank" href="https://icons8.com/icon/h4Ly5RazDdvK/puzzle">Puzzle</a> pochodzą z
-				<a target="_blank" href="https://icons8.com">Icons8</a>.
-			</p>
+			<p>Ikony pochodzą z <a target="_blank" href="https://icons8.com">Icons8</a>.</p>
 			<button id="close-info-btn" class="close-btn" title="zamknij">Zamknij</button>
 		</dialog>
 
-		<header class="header">
+		<header id="header" class="header">
 			<div class="logo">
 				<img src="./images/logo.svg" alt="logo" />
 				<h1>Diffly</h1>
@@ -82,56 +88,60 @@
 			<button id="instructions-btn" class="instructions-btn" title="instrukcja">
 				<img src="./images/instruction.webp" alt="instruction" />
 			</button>
-			<button id="start-btn" class="start-btn" title="rozpocznij"><img src="./images/reset.webp" alt="reset" /></button>
+			<button id="start-btn" class="start-btn" title="resetuj"><img src="./images/reset.webp" alt="reset" /></button>
 		</header>
 
 		<div id="output" class="output"></div>
 
 		<div id="input-keyboard-wrapper" class="input-keyboard-wrapper">
 			<div class="input-wrapper">
-				<input readonly disabled type="text" id="input" class="input" placeholder="wpisz tekst" />
-				<button disabled id="enter-btn" class="enter-btn" title="sprawdź">Sprawdź!</button>
+				<input readonly type="text" id="input" class="input" placeholder="wpisz tekst" />
+				<button id="enter-btn" class="enter-btn" title="sprawdź">
+					<img src="./images/arrow-right.webp" alt="enter" />
+				</button>
 			</div>
 			<div id="keyboard" class="keyboard">
 				<div id="keyboard-latin" class="keyboard-latin qwerty">
-					<button disabled class="key" id="a-btn">a</button>
-					<button disabled class="key" id="b-btn">b</button>
-					<button disabled class="key" id="c-btn">c</button>
-					<button disabled class="key" id="d-btn">d</button>
-					<button disabled class="key" id="e-btn">e</button>
-					<button disabled class="key" id="f-btn">f</button>
-					<button disabled class="key" id="g-btn">g</button>
-					<button disabled class="key" id="h-btn">h</button>
-					<button disabled class="key" id="i-btn">i</button>
-					<button disabled class="key" id="j-btn">j</button>
-					<button disabled class="key" id="k-btn">k</button>
-					<button disabled class="key" id="l-btn">l</button>
-					<button disabled class="key" id="m-btn">m</button>
-					<button disabled class="key" id="n-btn">n</button>
-					<button disabled class="key" id="o-btn">o</button>
-					<button disabled class="key" id="p-btn">p</button>
-					<button disabled class="key" id="q-btn">q</button>
-					<button disabled class="key" id="r-btn">r</button>
-					<button disabled class="key" id="s-btn">s</button>
-					<button disabled class="key" id="t-btn">t</button>
-					<button disabled class="key" id="u-btn">u</button>
-					<button disabled class="key" id="v-btn">v</button>
-					<button disabled class="key" id="w-btn">w</button>
-					<button disabled class="key" id="x-btn">x</button>
-					<button disabled class="key" id="y-btn">y</button>
-					<button disabled class="key" id="z-btn">z</button>
-					<button disabled id="backspace-btn" class="backspace-btn">usuń</button>
+					<button class="key" id="a-btn">a</button>
+					<button class="key" id="b-btn">b</button>
+					<button class="key" id="c-btn">c</button>
+					<button class="key" id="d-btn">d</button>
+					<button class="key" id="e-btn">e</button>
+					<button class="key" id="f-btn">f</button>
+					<button class="key" id="g-btn">g</button>
+					<button class="key" id="h-btn">h</button>
+					<button class="key" id="i-btn">i</button>
+					<button class="key" id="j-btn">j</button>
+					<button class="key" id="k-btn">k</button>
+					<button class="key" id="l-btn">l</button>
+					<button class="key" id="m-btn">m</button>
+					<button class="key" id="n-btn">n</button>
+					<button class="key" id="o-btn">o</button>
+					<button class="key" id="p-btn">p</button>
+					<button class="key" id="q-btn">q</button>
+					<button class="key" id="r-btn">r</button>
+					<button class="key" id="s-btn">s</button>
+					<button class="key" id="t-btn">t</button>
+					<button class="key" id="u-btn">u</button>
+					<button class="key" id="v-btn">v</button>
+					<button class="key" id="w-btn">w</button>
+					<button class="key" id="x-btn">x</button>
+					<button class="key" id="y-btn">y</button>
+					<button class="key" id="z-btn">z</button>
+					<button id="backspace-btn" class="backspace-btn">
+						<img src="./images/backspace.webp" title="usuń" alt="backspace" />
+					</button>
 				</div>
 				<div id="keyboard-polish" class="keyboard-polish">
-					<button disabled class="key" id="ą-btn">ą</button>
-					<button disabled class="key" id="ć-btn">ć</button>
-					<button disabled class="key" id="ę-btn">ę</button>
-					<button disabled class="key" id="ł-btn">ł</button>
-					<button disabled class="key" id="ń-btn">ń</button>
-					<button disabled class="key" id="ó-btn">ó</button>
-					<button disabled class="key" id="ś-btn">ś</button>
-					<button disabled class="key" id="ź-btn">ź</button>
-					<button disabled class="key" id="ż-btn">ż</button>
+					<button class="key" id="ą-btn">ą</button>
+					<button class="key" id="ć-btn">ć</button>
+					<button class="key" id="ę-btn">ę</button>
+					<button class="key" id="ł-btn">ł</button>
+					<button class="key" id="ń-btn">ń</button>
+					<button class="key" id="ó-btn">ó</button>
+					<button class="key" id="ś-btn">ś</button>
+					<button class="key" id="ź-btn">ź</button>
+					<button class="key" id="ż-btn">ż</button>
 				</div>
 			</div>
 		</div>
