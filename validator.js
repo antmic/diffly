@@ -8,13 +8,7 @@ export const validator = (input, word) => {
 		arr.splice(index, 1, '#');
 	}
 
-	function hideSubstring(str, start, end) {
-		let replacement = '#'.repeat(end - start);
-		let newStr = str.substring(0, start) + replacement + str.substring(end);
-		return newStr;
-	}
-
-	function populateResultArr() {
+	function populateResultArr(input) {
 		Array.from(input).forEach((letter, index) => {
 			resultArr.push({
 				index: index,
@@ -27,14 +21,12 @@ export const validator = (input, word) => {
 				isInSequence: false,
 				isFirstInSequence: false,
 				isLastInSequence: false,
-				sequenceNumber: [],
-				matchingIndices: new Set(),
 				priority: 0,
 			});
 		});
 	}
 
-	function getPossibleLetters() {
+	function getPossibleLetters(inputArr, wordSet, resultArr) {
 		const result = inputArr.filter((letter, index) => {
 			if (wordSet.has(letter)) {
 				resultArr[index].isPossible = true;
@@ -44,7 +36,7 @@ export const validator = (input, word) => {
 		return result;
 	}
 
-	function getPossibleUniqueLetters(possibleLetters) {
+	function getPossibleUniqueLetters(possibleLetters, wordArr) {
 		const localWordArr = wordArr.slice();
 		const result = possibleLetters.filter(letter => {
 			if (localWordArr.indexOf(letter) !== -1) {
@@ -87,27 +79,13 @@ export const validator = (input, word) => {
 		return str1.slice(end - maxLength + 1, end + 1);
 	}
 
-	function matchStrings(str, substring) {
-		let startIndex = str.indexOf(substring);
-		if (startIndex !== -1) {
-			let endIndex = startIndex + substring.length;
-			return [startIndex, endIndex];
-		} else {
-			return null;
-		}
-	}
-
-	const getAllSubstrings = (input, word, hide) => {
-		let useHide = hide;
+	const getAllSubstrings = (input, word) => {
 		let substrings = [];
 		let newInput = input.slice();
 		let newWord = word.slice();
 		(function _getAllSubstrings() {
 			let substr1 = longestCommonSubstring(newInput, newWord);
 			newInput = newInput.replace(substr1, '');
-			if (useHide) {
-				newWord = newWord.replace(substr1, '');
-			}
 			if (substr1.length <= 1) {
 				return;
 			} else {
@@ -130,80 +108,81 @@ export const validator = (input, word) => {
 		return result;
 	};
 
-	function getSequences() {
-		resultArr.forEach(element => {
-			const nextLetter = resultArr[element.index + 1]?.letter;
-			const previousLetter = resultArr[element.index - 1]?.letter;
-			const wordIndices = getMatchingIndices(element.letter, wordArr);
-			wordIndices.forEach(i => {
-				if (wordArr[i - 1] === previousLetter) {
-					element.matchingIndices.add(i);
-				}
-				if (wordArr[i + 1] === nextLetter) {
-					element.matchingIndices.add(i);
-				}
+	function getSequences(input, word, resultArr) {
+		const substrings = getAllSubstrings(input, word);
+		const uniqueSubstrings = Array.from(new Set(substrings));
+
+		function getSubstrings(string, uniqueSubstringsArr) {
+			let substringsInString = new Map();
+			uniqueSubstringsArr.forEach(substring => {
+				substringsInString.set(substring, new Map());
+				substringsInString.get(substring).set('indices', getAllMatches(string, substring));
+				substringsInString.get(substring).set('length', getAllMatches(string, substring).length);
 			});
-		});
+			return substringsInString;
+		}
 
-		let substrings = getAllSubstrings(input, word, false);
+		const substringsInInput = getSubstrings(input, uniqueSubstrings);
+		const substringsInWord = getSubstrings(word, uniqueSubstrings);
 
-		let uniqueSubstrings = Array.from(new Set(substrings));
+		function getChosenIndices(substringsInWord, substringsInInput, resultArr) {
+			let result = [];
+			substringsInWord.forEach((value, key) => {
+				const maxNumberOfMatches = Math.min(
+					substringsInWord.get(key).get('length'),
+					substringsInInput.get(key).get('length')
+				);
 
-		let substringsInInput = new Map();
-		uniqueSubstrings.forEach(substring => {
-			substringsInInput.set(substring, new Map());
-			substringsInInput.get(substring).set('indices', getAllMatches(input, substring));
-			substringsInInput.get(substring).set('length', getAllMatches(input, substring).length);
-		});
+				const indicesArr = substringsInInput.get(key).get('indices');
 
-		let substringsInWord = new Map();
-		uniqueSubstrings.forEach(substring => {
-			substringsInWord.set(substring, new Map());
-			substringsInWord.get(substring).set('indices', getAllMatches(word, substring));
-			substringsInWord.get(substring).set('length', getAllMatches(word, substring).length);
-		});
+				let ranges = [];
+				indicesArr.forEach(index => {
+					const range = Array.from({ length: index[1] - index[0] }, (_, i) => i + index[0]);
+					if (range.length > 1) {
+						let prioritySum = 0;
+						range.forEach(index => {
+							prioritySum += resultArr[index].priority;
+						});
+						ranges.push(
+							new Map([
+								['range', range],
+								['prioritySum', prioritySum],
+							])
+						);
+					}
+				});
 
-		let chosenIndices = [];
-		substringsInWord.forEach((value, key) => {
-			let maxNumberOfMatches = Math.min(
-				substringsInWord.get(key).get('length'),
-				substringsInInput.get(key).get('length')
-			);
+				const topNMatches = ranges.sort((a, b) => {
+					return b.get('prioritySum') - a.get('prioritySum');
+				});
 
-			let indicesArr = substringsInInput.get(key).get('indices');
-
-			let ranges = [];
-			indicesArr.forEach(index => {
-				let range = Array.from({ length: index[1] - index[0] }, (_, i) => i + index[0]);
-				if (range.length > 1) {
-					let prioritySum = 0;
-					range.forEach((index, i) => {
-						prioritySum += resultArr[index].priority;
-					});
-					ranges.push(
-						new Map([
-							['range', range],
-							['prioritySum', prioritySum],
-						])
-					);
-				}
+				const chosenMatches = topNMatches.slice(0, maxNumberOfMatches);
+				chosenMatches.forEach(match => {
+					result.push(match.get('range'));
+				});
 			});
+			return result;
+		}
+		const chosenIndices = getChosenIndices(substringsInWord, substringsInInput, resultArr);
 
-			let topNMatches = ranges.sort((a, b) => {
-				return b.get('prioritySum') - a.get('prioritySum');
+		function getUniqueChosenIndices(chosenIndices) {
+			const result = chosenIndices.filter((element, index) => {
+				let isOverlapping = false;
+				chosenIndices.forEach((otherElement, otherIndex) => {
+					if (index !== otherIndex) {
+						if (element.every(index => otherElement.includes(index))) {
+							isOverlapping = true;
+						}
+					}
+				});
+				return !isOverlapping;
 			});
+			return result;
+		}
 
-			let chosenMatches = topNMatches.slice(0, maxNumberOfMatches);
-			chosenMatches.forEach(match => {
-				chosenIndices.push(match.get('range'));
-			});
-		});
-		console.log('chosenIndices');
-		console.log(chosenIndices);
+		const uniqueChosenIndices = getUniqueChosenIndices(chosenIndices);
 
-		//todo: check if chosenIndices are overlapping
-
-		chosenIndices.forEach(element => {
+		uniqueChosenIndices.forEach(element => {
 			element.forEach((index, i) => {
 				if (i === 0) {
 					resultArr[index].isFirstInSequence = true;
@@ -221,33 +200,23 @@ export const validator = (input, word) => {
 		});
 	}
 
-	function checkFirstLetter() {
+	function checkFirstLetter(resultArr, word) {
 		if (resultArr[0].letter === word[0]) {
 			resultArr[0].isFirst = true;
 			resultArr[0].priority += 3;
 		}
 	}
 
-	function checkLastLetter() {
+	function checkLastLetter(resultArr, word) {
 		if (resultArr[resultArr.length - 1].letter === word[word.length - 1]) {
 			resultArr[resultArr.length - 1].isLast = true;
 			resultArr[resultArr.length - 1].priority += 3;
 		}
 	}
 
-	function checkOrder() {
-		const usedLettersArray = resultArr.filter(letter => letter.isUsed);
-		let tempWordArray = wordArr.slice();
-		usedLettersArray.forEach(element => {
-			if (tempWordArray.indexOf(element.letter) !== -1) {
-				resultArr[element.index].isCorrectOrder = true;
-				resultArr[element.index].priority += 1;
-				tempWordArray = tempWordArray.slice(tempWordArray.indexOf(element.letter) + 1);
-			}
-		});
-	}
+	function checkOrder() {}
 
-	function getUsedLetters() {
+	function getUsedLetters(possibleUniqueLetters, inputArr) {
 		possibleUniqueLetters.forEach(letter => {
 			const indices = getMatchingIndices(letter, inputArr);
 			const sortedIndices = indices.sort((a, b) => {
@@ -258,13 +227,13 @@ export const validator = (input, word) => {
 		});
 	}
 
-	populateResultArr();
-	const possibleLetters = getPossibleLetters();
-	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters);
-	checkFirstLetter();
-	checkLastLetter();
+	populateResultArr(input);
+	const possibleLetters = getPossibleLetters(inputArr, wordSet, resultArr);
+	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters, wordArr);
+	checkFirstLetter(resultArr, word);
+	checkLastLetter(resultArr, word);
 	checkOrder();
-	getSequences();
-	getUsedLetters();
+	getSequences(input, word, resultArr);
+	getUsedLetters(possibleUniqueLetters, inputArr);
 	return resultArr;
 };
