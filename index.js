@@ -38,8 +38,12 @@ const serverUrl = 'http://localhost:3000';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
+//initialization sequence
 let word = '';
 let guessWords = [];
+let isMobile = isMobileDevice();
+setOutputMaxHeight();
+loadFromLocalStorage();
 
 // functions
 async function getWord() {
@@ -205,27 +209,21 @@ function loadFromLocalStorage() {
 
 function setOutputMaxHeight() {
 	const keyboardHeight = getElement('input-keyboard-wrapper').offsetHeight;
-	output.style.maxHeight = `calc(100vh - ${keyboardHeight + 60}px)`;
+	output.style.maxHeight = `calc(90vh - ${keyboardHeight}px)`;
 }
-
-// self-calling init function
-(function init() {
-	isMobileDevice();
-	setOutputMaxHeight();
-	loadFromLocalStorage();
-})();
 
 // event listeners
 enterBtn.addEventListener('click', async () => {
-	if (!input.value) {
+	const localInput = input.value.toLowerCase();
+	if (!localInput) {
 		return;
 	}
-	const isWordInDict = await checkWord(input.value);
+	const isWordInDict = await checkWord(localInput);
 	if (isWordInDict.message) {
 		validate(word);
 	} else {
 		errorText.innerHTML = '<p>Słowo "<span id="error-word"></span>" nie występuje w słowniku!</p>';
-		getElement('error-word').innerText = input.value;
+		getElement('error-word').innerText = localInput;
 		errorDialog.showModal();
 		setTimeout(() => {
 			errorDialog.close();
@@ -255,16 +253,18 @@ document.addEventListener('keydown', function (event) {
 	}
 });
 
-document.addEventListener('keydown', function (event) {
-	let key = event.key?.toLowerCase();
-	let button = getElement(key + '-btn');
-	if (button) {
-		button.classList.add('pressed');
-		setTimeout(function () {
-			button.classList.remove('pressed');
-		}, 200);
-	}
-});
+if (isMobile) {
+	document.addEventListener('keydown', function (event) {
+		let key = event.key?.toLowerCase();
+		let button = getElement(key + '-btn');
+		if (button) {
+			button.classList.add('pressed');
+			setTimeout(function () {
+				button.classList.remove('pressed');
+			}, 200);
+		}
+	});
+}
 
 buttons.forEach(btn => {
 	btn.addEventListener('click', event => {

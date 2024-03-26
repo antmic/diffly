@@ -9,7 +9,7 @@
 		<title>Diffly</title>
 	</head>
 	<body>
-		<dialog id="error-dialog" class="modal">
+		<dialog id="error-dialog" class="error-dialog modal">
 			<p id="error-text"></p>
 		</dialog>
 		<dialog id="success-dialog" class="modal">
@@ -70,16 +70,23 @@
 			</p>
 			<button id="close-info-btn" class="close-btn" title="zamknij">Zamknij</button>
 		</dialog>
-		<div class="header">
+
+		<header class="header">
 			<div class="logo">
 				<img src="./images/logo.svg" alt="logo" />
 				<h1>Diffly</h1>
 			</div>
-			<button id="info-btn" class="info-btn" title="informacje">Info</button>
-			<button id="instructions-btn" class="instructions-btn" title="instrukcja">Instrukcja</button>
-			<button id="start-btn" class="start-btn" title="rozpocznij">Reset!</button>
-		</div>
+			<button id="info-btn" class="info-btn" title="informacje">
+				<img src="./images/info.svg" alt="info" />
+			</button>
+			<button id="instructions-btn" class="instructions-btn" title="instrukcja">
+				<img src="./images/instruction.webp" alt="instruction" />
+			</button>
+			<button id="start-btn" class="start-btn" title="rozpocznij"><img src="./images/reset.webp" alt="reset" /></button>
+		</header>
+
 		<div id="output" class="output"></div>
+
 		<div id="input-keyboard-wrapper" class="input-keyboard-wrapper">
 			<div class="input-wrapper">
 				<input readonly disabled type="text" id="input" class="input" placeholder="wpisz tekst" />

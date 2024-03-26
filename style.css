@@ -16,40 +16,39 @@
 
 body {
   background-color: #ffeff3;
-  margin: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
   body button {
-    background-color: #ffffff;
-    border: 1px solid black;
+    background-color: #fdd9ee;
+    border: 1px solid #333;
     border-radius: 50px;
     font-size: 16px;
-    box-shadow: 2px 2px 5px 2px gray;
+    box-shadow: 2px 2px 5px 2px #cccccc;
     transition: all 0.3s ease-in-out; }
     body button.pressed {
       box-shadow: none; }
-    @media (min-width: 768px) {
-      body button:not(:disabled):hover {
-        cursor: pointer; } }
   body .modal {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #fff;
+    background-color: #faf6f7;
     padding: 20px;
     margin: 20px auto;
-    border: 1px solid #000;
+    border: 1px solid #333;
     border-radius: 40px;
     width: 90%;
     max-width: 400px;
+    z-index: 2;
     margin: 10px auto;
     padding: 15px;
     align-self: center;
     text-align: center; }
     body .modal::backdrop {
       background: rgba(0, 0, 0, 0.8); }
+    body .modal.error-dialog {
+      background-color: #ffb3ba; }
     body .modal > * {
       margin: 20px 10px; }
     body .modal .password {
@@ -65,28 +64,33 @@ body {
         padding: 10px 20px; }
       body .modal .button-wrapper .close-btn {
         background-color: #ffb3ba; }
-        body .modal .button-wrapper .close-btn:hover {
-          background-color: #ff808c; }
+        @media (min-width: 768px) {
+          body .modal .button-wrapper .close-btn:not(:disabled):hover {
+            cursor: pointer;
+            background-color: #ff808c; } }
       body .modal .button-wrapper .play-again-btn {
         background-color: #baffc9; }
-        body .modal .button-wrapper .play-again-btn:hover {
-          background-color: #87ffa1; }
+        @media (min-width: 768px) {
+          body .modal .button-wrapper .play-again-btn:not(:disabled):hover {
+            cursor: pointer;
+            background-color: #87ffa1; } }
   body .dialog {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #fff;
+    background-color: #faf6f7;
     padding: 20px;
     margin: 20px auto;
-    border: 1px solid #000;
+    border: 1px solid #333;
     border-radius: 40px;
+    width: 90%;
+    max-width: 400px;
+    z-index: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1;
     transition: transform 0.3s ease-in-out;
-    transform: translateX(-220%);
-    max-width: 90%; }
+    transform: translateX(-100vw); }
     body .dialog.show {
       transform: translateX(0); }
     body .dialog > * {
@@ -105,65 +109,76 @@ body {
       font-weight: 700; }
     body .dialog button {
       padding: 10px 20px; }
-      body .dialog button:hover {
-        background-color: #d4f7dc; }
-  body .header {
+      @media (min-width: 768px) {
+        body .dialog button:not(:disabled):hover {
+          cursor: pointer;
+          background-color: #a9efb9; } }
+  body header {
     display: flex;
-    width: 100%;
+    justify-content: space-around;
     position: fixed;
-    justify-content: space-around; }
-    body .header .logo {
+    width: 100vw;
+    height: 10vh;
+    padding: 10px;
+    z-index: 1; }
+    body header:after {
+      content: '';
+      position: absolute;
+      bottom: -49px;
+      width: 100vw;
+      height: 50px;
+      z-index: 1;
+      background: linear-gradient(to bottom, #ffeff3, transparent);
+      pointer-events: none; }
+    body header .logo {
       display: flex;
       align-items: center;
       gap: 5px; }
-      body .header .logo h1 {
+      body header .logo h1 {
         margin: 0;
         color: #ba54d9; }
-    body .header button {
-      padding: 10px 20px; }
-      body .header button:hover {
-        background-color: #d4f7dc; }
+    body header button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fdd9ee;
+      border: 1px solid #333;
+      border-radius: 50%;
+      box-shadow: 2px 2px 5px 2px #cccccc;
+      transition: all 0.3s ease-in-out;
+      width: 48px;
+      height: 48px; }
+      body header button.pressed {
+        box-shadow: none; }
+      @media (min-width: 768px) {
+        body header button:not(:disabled):hover {
+          cursor: pointer;
+          background-color: #a9efb9; } }
+      body header button img {
+        height: 20px; }
   body .output {
-    margin: 20px;
-    max-height: 44vh;
-    overflow-y: auto;
     position: fixed;
-    width: 100%;
-    top: 50px; }
-    body .output:before {
-      content: '';
-      position: sticky;
-      display: block;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      background: linear-gradient(to bottom, #ffeff3, transparent);
-      pointer-events: none; }
-    body .output:after {
-      content: '';
-      position: sticky;
-      display: block;
-      bottom: 25px;
-      left: 0;
-      width: 100%;
-      height: 50px;
-      background: linear-gradient(to top, #ffeff3, transparent);
-      pointer-events: none; }
+    top: 10vh;
+    min-height: 45vh;
+    max-height: 45vh;
+    width: 100vw;
+    padding: 20px 10px;
+    overflow-y: auto;
+    overflow-x: hidden; }
     body .output .guess-word {
       margin-bottom: 10px;
       display: flex;
       justify-content: center;
       transition: all 1s ease-in-out; }
       body .output .guess-word .letter {
-        font-size: 20px;
+        font-size: 14px;
+        line-height: 1.35;
         font-weight: 500;
-        padding: 5px;
-        border: 1px solid #000000;
+        border: 1px solid #333;
         border-radius: 50%;
-        margin: 5px;
-        width: 40px;
-        height: 40px;
+        margin: 0.25vw;
+        width: 6vw;
+        height: 6vw;
         text-align: center;
         background-color: #cccccc;
         animation: drop 0.2s ease; }
@@ -176,48 +191,62 @@ body {
         body .output .guess-word .letter.correct-order {
           background-color: #baffc9; }
         body .output .guess-word .letter.middle-in-sequence {
-          margin: 5px 0;
+          margin: 0.25vw 0;
           border-radius: 0; }
         body .output .guess-word .letter.first-in-sequence {
-          margin: 5px 0 5px 5px;
+          margin: 0.25vw 0 0.25vw 0.25vw;
           border-top-right-radius: 0;
           border-bottom-right-radius: 0; }
         body .output .guess-word .letter.last-in-sequence {
-          margin: 5px 5px 5px 0;
+          margin: 0.25vw 0.25vw 0.25vw 0;
           border-top-left-radius: 0;
           border-bottom-left-radius: 0; }
   body .input-keyboard-wrapper {
     position: fixed;
-    margin-bottom: 20px;
+    width: 100vw;
+    max-height: 45vh;
+    min-height: 300px;
     bottom: 0;
-    padding-top: 2px;
-    background-color: #ffeff3; }
+    padding: 2px 0 20px 0;
+    background-color: #ffeff3;
+    z-index: 1; }
+    body .input-keyboard-wrapper:before {
+      content: '';
+      position: absolute;
+      top: -49px;
+      width: 100vw;
+      height: 50px;
+      z-index: 1;
+      background: linear-gradient(to top, #ffeff3, transparent); }
     body .input-keyboard-wrapper .input-wrapper {
       display: flex;
       justify-content: space-around;
       width: 100%;
       margin-bottom: 10px; }
       body .input-keyboard-wrapper .input-wrapper .input {
-        background-color: #ffffff;
-        border: 1px solid black;
+        background-color: #fdd9ee;
+        border: 1px solid #333;
         border-radius: 50px;
         font-size: 16px;
-        box-shadow: 2px 2px 5px 2px gray;
+        box-shadow: 2px 2px 5px 2px #cccccc;
         transition: all 0.3s ease-in-out;
         box-shadow: none;
         padding: 10px 20px;
         outline: none;
         transition: none;
         width: 65%;
-        text-align: center; }
+        text-align: center;
+        background-color: #faf6f7; }
         body .input-keyboard-wrapper .input-wrapper .input.pressed {
           box-shadow: none; }
         body .input-keyboard-wrapper .input-wrapper .input:focus-visible {
-          border: 2px solid black; }
+          border: 2px solid #000000; }
       body .input-keyboard-wrapper .input-wrapper .enter-btn {
         width: 30%; }
-        body .input-keyboard-wrapper .input-wrapper .enter-btn:hover {
-          background-color: #d4f7dc; }
+        @media (min-width: 768px) {
+          body .input-keyboard-wrapper .input-wrapper .enter-btn:not(:disabled):hover {
+            cursor: pointer;
+            background-color: #a9efb9; } }
     body .input-keyboard-wrapper .keyboard {
       display: flex;
       flex-direction: column;
@@ -324,12 +353,14 @@ body {
           margin: 1vw;
           border-radius: 5px;
           font-size: 20px;
-          background-color: #ffc8e7; }
-          body .input-keyboard-wrapper .keyboard .keyboard-latin .key:not(:disabled):hover,
-          body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn:not(:disabled):hover,
-          body .input-keyboard-wrapper .keyboard .keyboard-polish .key:not(:disabled):hover,
-          body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn:not(:disabled):hover {
-            background-color: #ff95d1; }
+          background-color: #fdd9ee; }
+          @media (min-width: 768px) {
+            body .input-keyboard-wrapper .keyboard .keyboard-latin .key:not(:disabled):hover,
+            body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn:not(:disabled):hover,
+            body .input-keyboard-wrapper .keyboard .keyboard-polish .key:not(:disabled):hover,
+            body .input-keyboard-wrapper .keyboard .keyboard-polish .backspace-btn:not(:disabled):hover {
+              cursor: pointer;
+              background-color: #faa9d8; } }
           body .input-keyboard-wrapper .keyboard .keyboard-latin .key.backspace-btn,
           body .input-keyboard-wrapper .keyboard .keyboard-latin .backspace-btn.backspace-btn,
           body .input-keyboard-wrapper .keyboard .keyboard-polish .key.backspace-btn,
@@ -338,9 +369,19 @@ body {
             max-width: 100px; }
       body .input-keyboard-wrapper .keyboard .key.letter {
         background-color: #cccccc; }
-        body .input-keyboard-wrapper .keyboard .key.letter:not(:disabled):hover {
-          background-color: #b3b3b3; }
+        @media (min-width: 768px) {
+          body .input-keyboard-wrapper .keyboard .key.letter:not(:disabled):hover {
+            cursor: pointer;
+            background-color: #b3b3b3; } }
       body .input-keyboard-wrapper .keyboard .key.used, body .input-keyboard-wrapper .keyboard .key.correct-order {
         background-color: #baffc9; }
-        body .input-keyboard-wrapper .keyboard .key.used:not(:disabled):hover, body .input-keyboard-wrapper .keyboard .key.correct-order:not(:disabled):hover {
-          background-color: #87ffa1; }
+        @media (min-width: 768px) {
+          body .input-keyboard-wrapper .keyboard .key.used:not(:disabled):hover, body .input-keyboard-wrapper .keyboard .key.correct-order:not(:disabled):hover {
+            cursor: pointer;
+            background-color: #87ffa1; } }
+
+@media (min-width: 768px) {
+  body header button.large-view {
+    display: block; }
+  body header button.small-view {
+    display: none; } }

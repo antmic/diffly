@@ -1,25 +1,29 @@
-$white: #ffffff;
 $black: #000000;
+$darkgray: #333;
 $gray: #cccccc;
 $yellow: #ffffba;
 $green: #baffc9;
 $blue: #bae1ff;
 $red: #ffb3ba;
-$pink: #ffc8e7;
+$pink: #fdd9ee;
 $purple: #ba54d9;
 $lightpink: #ffeff3;
 $darkpink: #9b557d;
+$whitepink: #faf6f7;
 $lightgreen: #d4f7dc;
 
 $bgc: $lightpink;
 $btn-color: $pink;
 
+$border: 1px solid $darkgray;
+$shadow: 2px 2px 5px 2px $gray;
+
 @mixin btn-style {
-	background-color: $white;
-	border: 1px solid black;
+	background-color: $btn-color;
+	border: $border;
 	border-radius: 50px;
 	font-size: 16px;
-	box-shadow: 2px 2px 5px 2px gray;
+	box-shadow: $shadow;
 	transition: all 0.3s ease-in-out;
 
 	&.pressed {
@@ -27,10 +31,26 @@ $btn-color: $pink;
 	}
 }
 
-@mixin key-hover {
+@mixin header-btn-style {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: $btn-color;
+	border: $border;
+	border-radius: 50%;
+	box-shadow: $shadow;
+	transition: all 0.3s ease-in-out;
+
+	&.pressed {
+		box-shadow: none;
+	}
+}
+
+@mixin key-hover($color) {
 	@media (min-width: 768px) {
 		&:not(:disabled):hover {
 			cursor: pointer;
+			background-color: darken($color, 10%);
 		}
 	}
 }
@@ -39,11 +59,14 @@ $btn-color: $pink;
 	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: #fff;
+	background-color: $whitepink;
 	padding: 20px;
 	margin: 20px auto;
-	border: 1px solid #000;
+	border: $border;
 	border-radius: 40px;
+	width: 90%;
+	max-width: 400px;
+	z-index: 2;
 }
 
 @keyframes drop {
@@ -70,7 +93,6 @@ $btn-color: $pink;
 
 body {
 	background-color: $bgc;
-	margin: 10px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -79,13 +101,10 @@ body {
 
 	button {
 		@include btn-style;
-		@include key-hover;
 	}
 
 	.modal {
 		@include dialog;
-		width: 90%;
-		max-width: 400px;
 		margin: 10px auto;
 		padding: 15px;
 		align-self: center;
@@ -93,6 +112,10 @@ body {
 
 		&::backdrop {
 			background: rgba(0, 0, 0, 0.8);
+		}
+
+		&.error-dialog {
+			background-color: $red;
 		}
 
 		> * {
@@ -117,16 +140,12 @@ body {
 
 			.close-btn {
 				background-color: $red;
-				&:hover {
-					background-color: darken($color: $red, $amount: 10%);
-				}
+				@include key-hover($red);
 			}
 
 			.play-again-btn {
 				background-color: $green;
-				&:hover {
-					background-color: darken($color: $green, $amount: 10%);
-				}
+				@include key-hover($green);
 			}
 		}
 	}
@@ -136,10 +155,8 @@ body {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		z-index: 1;
 		transition: transform 0.3s ease-in-out;
-		transform: translateX(-220%);
-		max-width: 90%;
+		transform: translateX(-100vw);
 
 		&.show {
 			transform: translateX(0);
@@ -169,17 +186,29 @@ body {
 
 		button {
 			padding: 10px 20px;
-			&:hover {
-				background-color: $lightgreen;
-			}
+			@include key-hover($lightgreen);
 		}
 	}
 
-	.header {
+	header {
 		display: flex;
-		width: 100%;
-		position: fixed;
 		justify-content: space-around;
+		position: fixed;
+		width: 100vw;
+		height: 10vh;
+		padding: 10px;
+		z-index: 1;
+
+		&:after {
+			content: '';
+			position: absolute;
+			bottom: -49px;
+			width: 100vw;
+			height: 50px;
+			z-index: 1;
+			background: linear-gradient(to bottom, $bgc, transparent);
+			pointer-events: none; // This allows clicks to pass through to the elements below
+		}
 
 		.logo {
 			display: flex;
@@ -193,43 +222,26 @@ body {
 		}
 
 		button {
-			padding: 10px 20px;
-			&:hover {
-				background-color: $lightgreen;
+			@include header-btn-style;
+			@include key-hover($lightgreen);
+			width: 48px;
+			height: 48px;
+
+			img {
+				height: 20px;
 			}
 		}
 	}
+
 	.output {
-		margin: 20px;
-		max-height: 44vh;
-		overflow-y: auto;
 		position: fixed;
-		width: 100%;
-		top: 50px;
-
-		&:before {
-			content: '';
-			position: sticky;
-			display: block;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 50px;
-			background: linear-gradient(to bottom, $bgc, transparent);
-			pointer-events: none; // This allows clicks to pass through to the elements below
-		}
-
-		&:after {
-			content: '';
-			position: sticky;
-			display: block;
-			bottom: 25px;
-			left: 0;
-			width: 100%;
-			height: 50px;
-			background: linear-gradient(to top, $bgc, transparent);
-			pointer-events: none; // This allows clicks to pass through to the elements below
-		}
+		top: 10vh;
+		min-height: 45vh;
+		max-height: 45vh; //just in case js doesn't work
+		width: 100vw;
+		padding: 20px 10px;
+		overflow-y: auto;
+		overflow-x: hidden;
 
 		.guess-word {
 			margin-bottom: 10px;
@@ -238,14 +250,16 @@ body {
 			transition: all 1s ease-in-out;
 
 			.letter {
-				font-size: 20px;
+				$letter-size: 6vw;
+				$letter-margin: 0.25vw;
+				font-size: 14px;
+				line-height: 1.35;
 				font-weight: 500;
-				padding: 5px;
-				border: 1px solid $black;
+				border: $border;
 				border-radius: 50%;
-				margin: 5px;
-				width: 40px;
-				height: 40px;
+				margin: $letter-margin;
+				width: $letter-size;
+				height: $letter-size;
 				text-align: center;
 				background-color: $gray;
 				animation: drop 0.2s ease;
@@ -267,18 +281,18 @@ body {
 				}
 
 				&.middle-in-sequence {
-					margin: 5px 0;
+					margin: $letter-margin 0;
 					border-radius: 0;
 				}
 
 				&.first-in-sequence {
-					margin: 5px 0 5px 5px;
+					margin: $letter-margin 0 $letter-margin $letter-margin;
 					border-top-right-radius: 0;
 					border-bottom-right-radius: 0;
 				}
 
 				&.last-in-sequence {
-					margin: 5px 5px 5px 0;
+					margin: $letter-margin $letter-margin $letter-margin 0;
 					border-top-left-radius: 0;
 					border-bottom-left-radius: 0;
 				}
@@ -288,10 +302,23 @@ body {
 
 	.input-keyboard-wrapper {
 		position: fixed;
-		margin-bottom: 20px;
+		width: 100vw;
+		max-height: 45vh;
+		min-height: 300px;
 		bottom: 0;
-		padding-top: 2px;
-		background-color: $lightpink;
+		padding: 2px 0 20px 0;
+		background-color: $bgc;
+		z-index: 1;
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: -49px;
+			width: 100vw;
+			height: 50px;
+			z-index: 1;
+			background: linear-gradient(to top, $bgc, transparent);
+		}
 
 		.input-wrapper {
 			display: flex;
@@ -307,18 +334,16 @@ body {
 				transition: none;
 				width: 65%;
 				text-align: center;
+				background-color: $whitepink;
 
 				&:focus-visible {
-					border: 2px solid black;
+					border: 2px solid $black;
 				}
 			}
 
 			.enter-btn {
 				width: 30%;
-
-				&:hover {
-					background-color: $lightgreen;
-				}
+				@include key-hover($lightgreen);
 			}
 		}
 
@@ -434,10 +459,7 @@ body {
 					border-radius: 5px;
 					font-size: 20px;
 					background-color: $pink;
-
-					&:not(:disabled):hover {
-						background-color: darken($color: $pink, $amount: 10%);
-					}
+					@include key-hover($pink);
 
 					&.backspace-btn {
 						width: 18vw;
@@ -449,19 +471,13 @@ body {
 			.key {
 				&.letter {
 					background-color: $gray;
-
-					&:not(:disabled):hover {
-						background-color: darken($color: $gray, $amount: 10%);
-					}
+					@include key-hover($gray);
 				}
 
 				&.used,
 				&.correct-order {
 					background-color: $green;
-
-					&:not(:disabled):hover {
-						background-color: darken($color: $green, $amount: 10%);
-					}
+					@include key-hover($green);
 				}
 			}
 		}
@@ -474,4 +490,17 @@ body {
 
 // tablet
 @media (min-width: 768px) {
+	body {
+		header {
+			button {
+				&.large-view {
+					display: block;
+				}
+
+				&.small-view {
+					display: none;
+				}
+			}
+		}
+	}
 }
