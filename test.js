@@ -9,6 +9,7 @@ const testCases = [
 	{ input: 'pingwin', word: 'pininfarina' },
 	{ input: 'ciocikawskaci', word: 'cimcietka' },
 	{ input: 'ciekawska', word: 'metka' },
+	{ input: 'telegram', word: 'lemur' },
 ];
 
 testCases.forEach(testCase => {

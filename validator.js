@@ -214,7 +214,16 @@ export const validator = (input, word) => {
 		}
 	}
 
-	function checkOrder() {}
+	function checkOrder(resultArr, word) {
+		let usedLetters = resultArr.filter(letter => letter.isUsed);
+		let tempArr = word;
+		usedLetters.forEach((letter, index) => {
+			if (tempArr.indexOf(letter.letter) !== -1) {
+				resultArr[letter.index].isCorrectOrder = true;
+				tempArr = tempArr.slice(tempArr.indexOf(letter.letter) + 1);
+			}
+		});
+	}
 
 	function getUsedLetters(possibleUniqueLetters, inputArr) {
 		possibleUniqueLetters.forEach(letter => {
@@ -232,8 +241,8 @@ export const validator = (input, word) => {
 	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters, wordArr);
 	checkFirstLetter(resultArr, word);
 	checkLastLetter(resultArr, word);
-	checkOrder();
 	getSequences(input, word, resultArr);
 	getUsedLetters(possibleUniqueLetters, inputArr);
+	checkOrder(resultArr, word);
 	return resultArr;
 };

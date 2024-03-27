@@ -167,8 +167,10 @@ body {
 			img {
 				height: 12px;
 			}
+
 			.logo-text {
 				color: $purple;
+				font-weight: 700;
 			}
 		}
 
@@ -358,7 +360,10 @@ body {
 				background-color: $whitepink;
 
 				&:focus-visible {
-					border: 2px solid $black;
+					border: 1px solid $darkpink;
+					&::placeholder {
+						color: $darkpink;
+					}
 				}
 			}
 

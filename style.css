@@ -97,7 +97,8 @@ body {
     body .dialog.info-dialog img {
       height: 12px; }
     body .dialog.info-dialog .logo-text {
-      color: #ba54d9; }
+      color: #ba54d9;
+      font-weight: 700; }
     body .dialog.instructions-dialog {
       font-size: 14px; }
     body .dialog > * {
@@ -254,7 +255,9 @@ body {
         body .input-keyboard-wrapper .input-wrapper .input.pressed {
           box-shadow: none; }
         body .input-keyboard-wrapper .input-wrapper .input:focus-visible {
-          border: 2px solid #000000; }
+          border: 1px solid #9b557d; }
+          body .input-keyboard-wrapper .input-wrapper .input:focus-visible::placeholder {
+            color: #9b557d; }
       body .input-keyboard-wrapper .input-wrapper .enter-btn {
         width: 30%;
         display: flex;
