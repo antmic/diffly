@@ -21,6 +21,7 @@ export const validator = (input, word) => {
 				isInSequence: false,
 				isFirstInSequence: false,
 				isLastInSequence: false,
+				sequenceId: null,
 				priority: 0,
 			});
 		});
@@ -182,19 +183,24 @@ export const validator = (input, word) => {
 
 		const uniqueChosenIndices = getUniqueChosenIndices(chosenIndices);
 
+		let sequenceId = 0;
 		uniqueChosenIndices.forEach(element => {
 			element.forEach((index, i) => {
 				if (i === 0) {
 					resultArr[index].isFirstInSequence = true;
 					resultArr[index].isInSequence = true;
 					resultArr[index].priority += 2;
+					resultArr[index].sequenceId = sequenceId;
 				} else if (i === element.length - 1) {
 					resultArr[index].isLastInSequence = true;
 					resultArr[index].isInSequence = true;
 					resultArr[index].priority += 2;
+					resultArr[index].sequenceId = sequenceId;
+					sequenceId++;
 				} else {
 					resultArr[index].isInSequence = true;
 					resultArr[index].priority += 2;
+					resultArr[index].sequenceId = sequenceId;
 				}
 			});
 		});
@@ -215,12 +221,23 @@ export const validator = (input, word) => {
 	}
 
 	function checkOrder(resultArr, word) {
-		let usedLetters = resultArr.filter(letter => letter.isUsed);
-		let tempArr = word;
-		usedLetters.forEach((letter, index) => {
-			if (tempArr.indexOf(letter.letter) !== -1) {
+		const usedLetters = resultArr.filter(letter => letter.isUsed);
+		let tempWord = word;
+		usedLetters.forEach(letter => {
+			if (letter.isInSequence) {
+				if (letter.isFirstInSequence) {
+					const sequence = resultArr.filter(l => l.sequenceId === letter.sequenceId);
+					const sequenceLetters = sequence.map(l => l.letter).join('');
+					if (tempWord.indexOf(sequenceLetters) !== -1) {
+						sequence.forEach(l => {
+							resultArr[l.index].isCorrectOrder = true;
+						});
+						tempWord = tempWord.slice(tempWord.indexOf(sequenceLetters) + sequenceLetters.length);
+					}
+				}
+			} else if (tempWord.indexOf(letter.letter) !== -1) {
 				resultArr[letter.index].isCorrectOrder = true;
-				tempArr = tempArr.slice(tempArr.indexOf(letter.letter) + 1);
+				tempWord = tempWord.slice(tempWord.indexOf(letter.letter) + 1);
 			}
 		});
 	}

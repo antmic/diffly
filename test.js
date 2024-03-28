@@ -10,6 +10,7 @@ const testCases = [
 	{ input: 'ciocikawskaci', word: 'cimcietka' },
 	{ input: 'ciekawska', word: 'metka' },
 	{ input: 'telegram', word: 'lemur' },
+	{ input: 'zdrowa', word: 'zaprowadzać' },
 ];
 
 testCases.forEach(testCase => {
