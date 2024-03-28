@@ -268,6 +268,26 @@ export const validator = (input, word) => {
 		});
 	}
 
+	function confirmFirstInSequence(resultArr, word) {
+		const firstLetter = resultArr[0];
+		if (firstLetter.isInSequence) {
+			// is sequences end index in word is the same as last letter index
+			let sequence = resultArr
+				.filter(l => l.sequenceId === firstLetter.sequenceId)
+				.map(l => l.letter)
+				.join('');
+			const matches = getAllMatches(word, sequence);
+
+			// check if any of the matches end at the index of the last letter in word
+			const isTrulyFirst = matches.some(match => match[1] === 0);
+			if (isTrulyFirst) {
+				firstLetter.isFirst = true;
+			} else {
+				firstLetter.isFirst = false;
+			}
+		}
+	}
+
 	function confirmLastInSequence(resultArr, word) {
 		const lastLetter = resultArr[resultArr.length - 1];
 		if (lastLetter.isInSequence) {
@@ -294,6 +314,7 @@ export const validator = (input, word) => {
 	checkFirstLetter(resultArr, word);
 	checkLastLetter(resultArr, word);
 	getSequences(input, word, resultArr);
+	confirmFirstInSequence(resultArr, word);
 	confirmLastInSequence(resultArr, word);
 	getUsedLetters(possibleUniqueLetters, inputArr);
 	checkOrder(resultArr, word);
