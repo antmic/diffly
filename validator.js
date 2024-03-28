@@ -207,16 +207,18 @@ export const validator = (input, word) => {
 	}
 
 	function checkFirstLetter(resultArr, word) {
-		if (resultArr[0].letter === word[0]) {
-			resultArr[0].isFirst = true;
-			resultArr[0].priority += 3;
+		const firstLetter = resultArr[0];
+		if (firstLetter.letter === word[0]) {
+			firstLetter.isFirst = true;
+			firstLetter.priority += 3;
 		}
 	}
 
 	function checkLastLetter(resultArr, word) {
-		if (resultArr[resultArr.length - 1].letter === word[word.length - 1]) {
-			resultArr[resultArr.length - 1].isLast = true;
-			resultArr[resultArr.length - 1].priority += 3;
+		const lastLetter = resultArr[resultArr.length - 1];
+		if (lastLetter.letter === word[word.length - 1]) {
+			lastLetter.isLast = true;
+			lastLetter.priority += 3;
 		}
 	}
 
@@ -243,7 +245,6 @@ export const validator = (input, word) => {
 
 		// handle edge case when last letter is correct but ends up as not in correct order
 		if (resultArr[resultArr.length - 1].isLast && !resultArr[resultArr.length - 1].isCorrectOrder) {
-			console.log('last letter is correct but not in correct order');
 			const lastLetter = resultArr[resultArr.length - 1];
 			const lastLetterIndex = resultArr[resultArr.length - 1].index;
 			// get previous letter matching last letter
@@ -267,12 +268,33 @@ export const validator = (input, word) => {
 		});
 	}
 
+	function confirmLastInSequence(resultArr, word) {
+		const lastLetter = resultArr[resultArr.length - 1];
+		if (lastLetter.isInSequence) {
+			// is sequences end index in word is the same as last letter index
+			let sequence = resultArr
+				.filter(l => l.sequenceId === lastLetter.sequenceId)
+				.map(l => l.letter)
+				.join('');
+			const matches = getAllMatches(word, sequence);
+
+			// check if any of the matches end at the index of the last letter in word
+			const isTrulyLast = matches.some(match => match[1] === word.length);
+			if (isTrulyLast) {
+				lastLetter.isLast = true;
+			} else {
+				lastLetter.isLast = false;
+			}
+		}
+	}
+
 	populateResultArr(input);
 	const possibleLetters = getPossibleLetters(inputArr, wordSet, resultArr);
 	const possibleUniqueLetters = getPossibleUniqueLetters(possibleLetters, wordArr);
 	checkFirstLetter(resultArr, word);
 	checkLastLetter(resultArr, word);
 	getSequences(input, word, resultArr);
+	confirmLastInSequence(resultArr, word);
 	getUsedLetters(possibleUniqueLetters, inputArr);
 	checkOrder(resultArr, word);
 	return resultArr;

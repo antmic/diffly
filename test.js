@@ -12,6 +12,8 @@ const testCases = [
 	{ input: 'telegram', word: 'lemur' },
 	{ input: 'zdrowa', word: 'zaprowadzać' },
 	{ input: 'tygrysy', word: 'dyplomatyczny' },
+	{ input: 'wydatnie', word: 'uwydatnienie' },
+	{ input: 'gnie', word: 'uwydatnienie' },
 ];
 
 testCases.forEach(testCase => {
@@ -48,8 +50,16 @@ testCases.forEach(testCase => {
 		} else {
 			show.push(element.letter);
 		}
+
+		if (element.isFirst) {
+			show.unshift('*');
+		}
+		if (element.isLast) {
+			show.push('*');
+		}
 	});
 	console.log(testCase.word);
+	console.log(testCase.input);
 	console.log(show.join(''));
 	//console.log(result);
 });
