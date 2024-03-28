@@ -246,7 +246,7 @@ document.addEventListener('keydown', function (event) {
 	}
 });
 
-if (isMobile) {
+if (!isMobile) {
 	document.addEventListener('keydown', function (event) {
 		let key = event.key?.toLowerCase();
 		let button = getElement(key + '-btn');
