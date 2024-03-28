@@ -34,7 +34,8 @@ const buttons = [
 	...keyboard,
 ];
 
-const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+//const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+const serverUrl = 'http://localhost:3000';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
@@ -206,20 +207,22 @@ function setOutputMaxHeight() {
 enterBtn.addEventListener('click', async () => {
 	const localInput = input.value.toLowerCase();
 	if (!localInput) {
+		input.focus();
 		return;
 	}
 	const isWordInDict = await checkWord(localInput);
 	if (isWordInDict.message) {
 		validate(word);
+		input.focus();
 	} else {
 		errorText.innerHTML = '<p>Słowo "<span id="error-word"></span>" nie występuje w słowniku!</p>';
 		getElement('error-word').innerText = localInput;
 		errorDialog.showModal();
 		setTimeout(() => {
 			errorDialog.close();
+			input.focus();
 		}, errorTimeout);
 	}
-	input.focus();
 });
 
 startBtn.addEventListener('click', () => {
@@ -229,11 +232,13 @@ startBtn.addEventListener('click', () => {
 keyboard.forEach(key => {
 	key.addEventListener('click', () => {
 		input.value += key.innerText;
+		input.focus();
 	});
 });
 
 backspace.addEventListener('click', () => {
 	input.value = input.value.slice(0, -1);
+	input.focus();
 });
 
 document.addEventListener('keydown', function (event) {
