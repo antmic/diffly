@@ -11,6 +11,7 @@ const testCases = [
 	{ input: 'ciekawska', word: 'metka' },
 	{ input: 'telegram', word: 'lemur' },
 	{ input: 'zdrowa', word: 'zaprowadzać' },
+	{ input: 'tygrysy', word: 'dyplomatyczny' },
 ];
 
 testCases.forEach(testCase => {

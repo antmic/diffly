@@ -240,6 +240,20 @@ export const validator = (input, word) => {
 				tempWord = tempWord.slice(tempWord.indexOf(letter.letter) + 1);
 			}
 		});
+
+		// handle edge case when last letter is correct but ends up as not in correct order
+		if (resultArr[resultArr.length - 1].isLast && !resultArr[resultArr.length - 1].isCorrectOrder) {
+			console.log('last letter is correct but not in correct order');
+			const lastLetter = resultArr[resultArr.length - 1];
+			const lastLetterIndex = resultArr[resultArr.length - 1].index;
+			// get previous letter matching last letter
+			const previousLetter = resultArr
+				.slice(0, lastLetterIndex)
+				.reverse()
+				.find(letter => letter.letter === lastLetter.letter && letter.isCorrectOrder);
+			previousLetter.isCorrectOrder = false;
+			lastLetter.isCorrectOrder = true;
+		}
 	}
 
 	function getUsedLetters(possibleUniqueLetters, inputArr) {
