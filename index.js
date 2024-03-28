@@ -41,6 +41,7 @@ const errorTimeout = 2000;
 let word = '';
 let guessWords = [];
 let isMobile = false;
+let time = [];
 
 // functions
 async function getWord() {
@@ -112,6 +113,20 @@ const clearClasses = () => {
 	});
 };
 
+function conjugateWord(num, word1, word2, word3) {
+	if (num === 1) {
+		return word1;
+	} else if (getLastDigit(num) >= 2 && getLastDigit(num) <= 4) {
+		return word2;
+	} else {
+		return word3;
+	}
+}
+
+function getLastDigit(number) {
+	return parseInt(number.toString().slice(-1));
+}
+
 const validate = async word => {
 	const guess = input.value.toLowerCase();
 	const validatedWord = validator(guess, word);
@@ -124,6 +139,17 @@ const validate = async word => {
 			const dialog = getElement('success-dialog');
 			dialog.showModal();
 			getElement('password').innerText = word;
+			const scoreWordsCount = getScore()[0];
+			const scoreWordsText = conjugateWord(scoreWordsCount, 'słowo', 'słowa', 'słów');
+			const scoreLettersCount = getScore()[1];
+			const scoreLettersText = conjugateWord(scoreLettersCount, 'litera', 'litery', 'liter');
+			const scoreMinutesCount = getScore()[2];
+			const scoreMinutesText = conjugateWord(scoreMinutesCount, 'minuta', 'minuty', 'minut');
+			const scoreSecondsCount = getScore()[3];
+			const scoreSecondsText = conjugateWord(scoreSecondsCount, 'sekunda', 'sekundy', 'sekund');
+			getElement(
+				'score'
+			).innerHTML = `Twój wynik to ${scoreWordsCount} ${scoreWordsText} i ${scoreLettersCount} ${scoreLettersText}<br> w czasie ${scoreMinutesCount} ${scoreMinutesText} i ${scoreSecondsCount} ${scoreSecondsText}!`;
 			output.innerHTML = '';
 			guessWords = [];
 			localStorage.removeItem('diffle-word');
@@ -158,6 +184,7 @@ function renderWord(word, timeout) {
 async function restartGame() {
 	localStorage.removeItem('diffle-word');
 	localStorage.removeItem('diffle-input');
+	localStorage.removeItem('diffle-time');
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
@@ -193,6 +220,13 @@ function loadFromLocalStorage() {
 	} else {
 		restartGame();
 	}
+
+	const loadedTime = localStorage.getItem('diffle-time');
+	if (loadedTime) {
+		time = JSON.parse(loadedTime);
+	} else {
+		time = [];
+	}
 }
 
 function setOutputMaxHeight() {
@@ -202,6 +236,20 @@ function setOutputMaxHeight() {
 	output.style.maxHeight = `calc(100dvh - ${keyboardHeight}px - ${headerHeight}px)`;
 }
 
+function getScore() {
+	const scoreWords = guessWords.length;
+	const scoreLetters = guessWords.reduce((acc, word) => acc + word.length, 0);
+	const timeInSeconds = Math.round((time[time.length - 1] - time[0]) / 1000);
+	const minutes = Math.floor(timeInSeconds / 60);
+	const seconds = timeInSeconds % 60;
+	return [scoreWords, scoreLetters, minutes, seconds];
+}
+
+function saveTime(time) {
+	time.push(new Date().getTime());
+	localStorage.setItem('diffle-time', JSON.stringify(time));
+}
+
 // event listeners
 enterBtn.addEventListener('click', async () => {
 	const localInput = input.value.toLowerCase();
@@ -209,6 +257,7 @@ enterBtn.addEventListener('click', async () => {
 		input.focus();
 		return;
 	}
+	saveTime(time);
 	const isWordInDict = await checkWord(localInput);
 	if (isWordInDict.message) {
 		validate(word);
