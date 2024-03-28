@@ -5,7 +5,7 @@ function getElement(id) {
 }
 
 // elements
-const startBtn = getElement('start-btn');
+const resetBtn = getElement('reset-btn');
 const enterBtn = getElement('enter-btn');
 const header = getElement('header');
 const input = getElement('input');
@@ -24,7 +24,7 @@ const errorDialog = getElement('error-dialog');
 const errorText = getElement('error-text');
 const buttons = [
 	enterBtn,
-	startBtn,
+	resetBtn,
 	instructionsBtn,
 	closeInstructionsBtn,
 	playAgainBtn,
@@ -183,10 +183,11 @@ function renderWord(word, timeout) {
 	});
 }
 
-async function restartGame() {
+async function resetGame() {
 	localStorage.removeItem('diffle-word');
 	localStorage.removeItem('diffle-input');
 	localStorage.removeItem('diffle-time');
+	time = [];
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
@@ -208,7 +209,7 @@ function loadFromLocalStorage() {
 	if (loadedWord) {
 		word = loadedWord;
 	} else {
-		restartGame();
+		resetGame();
 	}
 
 	const loadedInput = localStorage.getItem('diffle-input');
@@ -220,7 +221,7 @@ function loadFromLocalStorage() {
 			renderWord(word, 0);
 		});
 	} else {
-		restartGame();
+		resetGame();
 	}
 
 	const loadedTime = localStorage.getItem('diffle-time');
@@ -275,8 +276,8 @@ enterBtn.addEventListener('click', async () => {
 	}
 });
 
-startBtn.addEventListener('click', () => {
-	restartGame();
+resetBtn.addEventListener('click', () => {
+	resetGame();
 });
 
 keyboard.forEach(key => {
@@ -339,7 +340,7 @@ closeInfoBtn.addEventListener('click', function () {
 });
 
 playAgainBtn.addEventListener('click', function () {
-	restartGame();
+	resetGame();
 	document.removeEventListener('keydown', disableEscapeKey);
 	successDialog.close();
 });
