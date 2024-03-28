@@ -407,7 +407,7 @@ body {
             cursor: pointer;
             background-color: #87ffa1; } }
 
-@media (min-width: 768px) {
+@media (min-width: 834px) {
   body .output .guess-word .letter {
     font-size: 32px;
     margin: 3px; }
