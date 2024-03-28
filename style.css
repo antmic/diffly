@@ -10,7 +10,8 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box; }
+  box-sizing: border-box;
+  touch-action: manipulation; }
   *:focus-visible {
     outline: none; }
 
@@ -26,7 +27,8 @@ body {
     border-radius: 50px;
     font-size: 16px;
     box-shadow: 2px 2px 5px 2px #cccccc;
-    transition: all 0.3s ease-in-out; }
+    transition: all 0.3s ease-in-out;
+    color: #000000; }
     body button.pressed {
       box-shadow: none; }
   body .modal {
@@ -129,7 +131,7 @@ body {
     position: fixed;
     width: 100vw;
     max-width: 1024px;
-    height: 10vh;
+    height: 10dvh;
     max-height: 80px;
     padding: 10px;
     z-index: 1; }
@@ -170,9 +172,9 @@ body {
         height: 20px; }
   body .output {
     position: fixed;
-    top: 10vh;
-    min-height: 45vh;
-    max-height: 45vh;
+    top: 10dvh;
+    min-height: 45dvh;
+    max-height: 45dvh;
     width: 100vw;
     max-width: 1024px;
     padding: 20px 10px;
@@ -219,7 +221,7 @@ body {
   body .input-keyboard-wrapper {
     position: fixed;
     width: 100vw;
-    max-height: 45vh;
+    max-height: 45dvh;
     bottom: 0;
     padding: 2px 0 20px 0;
     background-color: #ffeff3;
@@ -245,6 +247,7 @@ body {
         font-size: 16px;
         box-shadow: 2px 2px 5px 2px #cccccc;
         transition: all 0.3s ease-in-out;
+        color: #000000;
         box-shadow: none;
         padding: 10px 20px;
         outline: none;

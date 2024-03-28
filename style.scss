@@ -25,6 +25,7 @@ $shadow: 2px 2px 5px 2px $gray;
 	font-size: 16px;
 	box-shadow: $shadow;
 	transition: all 0.3s ease-in-out;
+	color: $black;
 
 	&.pressed {
 		box-shadow: none;
@@ -85,6 +86,7 @@ $shadow: 2px 2px 5px 2px $gray;
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	touch-action: manipulation;
 
 	&:focus-visible {
 		outline: none;
@@ -214,7 +216,7 @@ body {
 		position: fixed;
 		width: 100vw;
 		max-width: 1024px;
-		height: 10vh;
+		height: 10dvh;
 		max-height: 80px;
 		padding: 10px;
 		z-index: 1;
@@ -255,9 +257,9 @@ body {
 
 	.output {
 		position: fixed;
-		top: 10vh;
-		min-height: 45vh;
-		max-height: 45vh; //just in case js doesn't work
+		top: 10dvh;
+		min-height: 45dvh;
+		max-height: 45dvh; //just in case js doesn't work
 		width: 100vw;
 		max-width: 1024px;
 		padding: 20px 10px;
@@ -326,7 +328,7 @@ body {
 	.input-keyboard-wrapper {
 		position: fixed;
 		width: 100vw;
-		max-height: 45vh;
+		max-height: 45dvh;
 		bottom: 0;
 		padding: 2px 0 20px 0;
 		background-color: $bgc;

@@ -199,7 +199,7 @@ function setOutputMaxHeight() {
 	const keyboardHeight = getElement('input-keyboard-wrapper').offsetHeight;
 	const headerHeight = header.offsetHeight;
 	output.style.top = `${headerHeight}px`;
-	output.style.maxHeight = `calc(100vh - ${keyboardHeight}px - ${headerHeight}px)`;
+	output.style.maxHeight = `calc(100dvh - ${keyboardHeight}px - ${headerHeight}px)`;
 }
 
 // event listeners
