@@ -278,8 +278,8 @@ export const validator = (input, word) => {
 				.join('');
 			const matches = getAllMatches(word, sequence);
 
-			// check if any of the matches end at the index of the last letter in word
-			const isTrulyFirst = matches.some(match => match[1] === 0);
+			// check if any of the matches beginning at the index of the first letter in word
+			const isTrulyFirst = matches.some(match => match[0] === 0);
 			if (isTrulyFirst) {
 				firstLetter.isFirst = true;
 			} else {
