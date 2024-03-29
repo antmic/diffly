@@ -156,6 +156,7 @@ const validate = async word => {
 			guessWords = [];
 			localStorage.removeItem('diffle-word');
 			localStorage.removeItem('diffle-input');
+			localStorage.removeItem('diffle-time');
 			clearClasses();
 			document.addEventListener('keydown', disableEscapeKey);
 		}, word.length * renderTimeout + 1000);
