@@ -252,8 +252,10 @@ export const validator = (input, word) => {
 				.slice(0, lastLetterIndex)
 				.reverse()
 				.find(letter => letter.letter === lastLetter.letter && letter.isCorrectOrder);
-			previousLetter.isCorrectOrder = false;
-			lastLetter.isCorrectOrder = true;
+			if (previousLetter) {
+				previousLetter.isCorrectOrder = false;
+				lastLetter.isCorrectOrder = true;
+			}
 		}
 	}
 
