@@ -14,6 +14,7 @@ const testCases = [
 	{ input: 'tygrysy', word: 'dyplomatyczny' },
 	{ input: 'wydatnie', word: 'uwydatnienie' },
 	{ input: 'gnie', word: 'uwydatnienie' },
+	{ input: 'sklonowanie', word: 'skomplikowanie' },
 ];
 
 testCases.forEach(testCase => {
@@ -61,5 +62,5 @@ testCases.forEach(testCase => {
 	console.log(testCase.word);
 	console.log(testCase.input);
 	console.log(show.join(''));
-	//console.log(result);
+	console.log(result);
 });

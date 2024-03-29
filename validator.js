@@ -244,10 +244,14 @@ export const validator = (input, word) => {
 		});
 
 		// handle edge case when last letter is correct but ends up as not in correct order
-		if (resultArr[resultArr.length - 1].isLast && !resultArr[resultArr.length - 1].isCorrectOrder) {
-			const lastLetter = resultArr[resultArr.length - 1];
-			const lastLetterIndex = resultArr[resultArr.length - 1].index;
-			// get previous letter matching last letter
+		let lastLetter = resultArr[resultArr.length - 1];
+		let lastLetterIndex = resultArr[resultArr.length - 1].index;
+		if (lastLetter.isLast && !lastLetter.isCorrectOrder) {
+			if (lastLetter.isInSequence) {
+				const sequence = resultArr.filter(l => l.sequenceId === lastLetter.sequenceId);
+				lastLetter = sequence[0];
+				lastLetterIndex = sequence[0].index;
+			}
 			const previousLetter = resultArr
 				.slice(0, lastLetterIndex)
 				.reverse()
@@ -255,6 +259,20 @@ export const validator = (input, word) => {
 			if (previousLetter) {
 				previousLetter.isCorrectOrder = false;
 				lastLetter.isCorrectOrder = true;
+
+				if (previousLetter.isInSequence) {
+					const sequencePrev = resultArr.filter(l => l.sequenceId === previousLetter.sequenceId);
+					sequencePrev.forEach(l => {
+						l.isCorrectOrder = false;
+					});
+				}
+
+				if (lastLetter.isInSequence) {
+					const sequenceLast = resultArr.filter(l => l.sequenceId === lastLetter.sequenceId);
+					sequenceLast.forEach(l => {
+						l.isCorrectOrder = true;
+					});
+				}
 			}
 		}
 	}
