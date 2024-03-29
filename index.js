@@ -116,7 +116,7 @@ const clearClasses = () => {
 function conjugateWord(num, word1, word2, word3) {
 	if (num === 1) {
 		return word1;
-	} else if (num => 10 && num <= 14) {
+	} else if (num >= 10 && num <= 14) {
 		return word3;
 	} else if (getLastDigit(num) >= 2 && getLastDigit(num) <= 4) {
 		return word2;
