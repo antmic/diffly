@@ -34,7 +34,7 @@ const buttons = [
 	...keyboard,
 ];
 
-const serverUrl = 'https://diffle-be-lingering-log-9938.fly.dev';
+const serverUrl = 'https://diffly.fly.dev';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
