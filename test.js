@@ -19,6 +19,15 @@ const testCases = [
 
 let failCount = 0;
 
+// Legend:
+// lowercase - incorrect letter
+// uppercase - correct letter
+// () - letter in correct order
+// * - first or last letter
+// < - first letter in sequence
+// > - last letter in sequence
+// -X- - letter in sequence
+
 testCases.forEach(testCase => {
 	let result = validator(testCase.input, testCase.word);
 	let show = [];
