@@ -82,6 +82,26 @@ $shadow: 2px 2px 5px 2px $gray;
 	}
 }
 
+@keyframes shake {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+	10%,
+	30%,
+	50%,
+	70%,
+	90% {
+		transform: translateX(-10px);
+	}
+	20%,
+	40%,
+	60%,
+	80% {
+		transform: translateX(10px);
+	}
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -350,6 +370,7 @@ body {
 			width: 100%;
 			max-width: 768px;
 			margin: 0 auto 10px;
+			position: relative;
 
 			.input {
 				@include btn-style;
@@ -366,6 +387,29 @@ body {
 					&::placeholder {
 						color: $darkpink;
 					}
+				}
+			}
+
+			.input-bubble {
+				opacity: 0;
+				position: absolute;
+				top: -50%;
+				z-index: 1;
+				padding: 10px 20px;
+				border-radius: 50px;
+				background: $red;
+				border: 1px solid $darkgray;
+				transition: all 0.3s ease-in-out;
+				text-align: center;
+
+				&.visible {
+					opacity: 1;
+					animation: shake 0.2s ease;
+					transition: none;
+				}
+
+				span {
+					font-weight: 700;
 				}
 			}
 

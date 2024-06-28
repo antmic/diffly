@@ -22,6 +22,7 @@ const closeInfoBtn = getElement('close-info-btn');
 const infoBtn = getElement('info-btn');
 const errorDialog = getElement('error-dialog');
 const errorText = getElement('error-text');
+const inputBubble = getElement('input-bubble');
 const buttons = [
 	enterBtn,
 	resetBtn,
@@ -267,11 +268,11 @@ enterBtn.addEventListener('click', async () => {
 		validate(word);
 		input.focus();
 	} else {
-		errorText.innerHTML = '<p>Słowo "<span id="error-word"></span>" nie występuje w słowniku!</p>';
-		getElement('error-word').innerText = localInput;
-		errorDialog.showModal();
+		inputBubble.innerHTML = '<p>Słowo "<span id="unknown-word"></span>" nie występuje w słowniku!</p>';
+		getElement('unknown-word').innerText = localInput;
+		inputBubble.classList.add('visible');
 		setTimeout(() => {
-			errorDialog.close();
+			inputBubble.classList.remove('visible');
 			input.focus();
 		}, errorTimeout);
 	}
