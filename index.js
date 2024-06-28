@@ -35,7 +35,8 @@ const buttons = [
 	...keyboard,
 ];
 
-const serverUrl = 'https://diffly-be.vercel.app';
+//const serverUrl = 'https://diffly-be.vercel.app';
+const serverUrl = 'http://localhost:3000';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
@@ -273,6 +274,7 @@ enterBtn.addEventListener('click', async () => {
 		inputBubble.classList.add('visible');
 		setTimeout(() => {
 			inputBubble.classList.remove('visible');
+			inputBubble.innerHTML = '';
 			input.focus();
 		}, errorTimeout);
 	}

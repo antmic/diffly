@@ -393,8 +393,8 @@ body {
 			.input-bubble {
 				opacity: 0;
 				position: absolute;
-				top: -50%;
-				z-index: 1;
+				top: -40%;
+				z-index: -1;
 				padding: 10px 20px;
 				border-radius: 50px;
 				background: $red;
@@ -403,6 +403,7 @@ body {
 				text-align: center;
 
 				&.visible {
+					z-index: 1;
 					opacity: 1;
 					animation: shake 0.2s ease;
 					transition: none;
