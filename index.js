@@ -35,7 +35,7 @@ const buttons = [
 	...keyboard,
 ];
 
-const serverUrl = 'https://diffly-be.vercel.app';
+const serverUrl = 'https://diffly-be-bun.onrender.com';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
