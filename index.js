@@ -34,6 +34,7 @@ const buttons = [
 	backspace,
 	...keyboard,
 ];
+const loader = getElement('loader');
 
 const serverUrl = 'https://diffly-be-bun.onrender.com';
 const renderTimeout = 300;
@@ -206,12 +207,14 @@ function isMobileDevice() {
 	}
 }
 
-function loadFromLocalStorage() {
+async function loadFromLocalStorage() {
 	const loadedWord = localStorage.getItem('diffle-word');
 	if (loadedWord) {
 		word = loadedWord;
 	} else {
-		resetGame();
+		loader.showModal();
+		await resetGame();
+		loader.close();
 	}
 
 	const loadedInput = localStorage.getItem('diffle-input');
@@ -223,7 +226,9 @@ function loadFromLocalStorage() {
 			renderWord(word, 0);
 		});
 	} else {
-		resetGame();
+		loader.showModal();
+		await resetGame();
+		loader.close();
 	}
 
 	const loadedTime = localStorage.getItem('diffle-time');

@@ -21,6 +21,14 @@
     transform: translateX(10px);
   }
 }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 * {
   margin: 0;
   padding: 0;
@@ -107,6 +115,28 @@ body .modal .button-wrapper .play-again-btn {
     cursor: pointer;
     background-color: #87ffa1;
   }
+}
+body .modal .loader {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+body .modal .loader .loader-animation {
+  border: 5px solid #ffeff3;
+  border-top: 5px solid #9b557d;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  animation: spin 2s linear infinite;
+}
+body .modal .loader .loader-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #9b557d;
 }
 body .dialog {
   position: fixed;
