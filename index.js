@@ -194,7 +194,16 @@ async function resetGame() {
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
+	let loadingFinished = false;
+	const loaderTimeout = setTimeout(() => {
+		if (!loadingFinished) {
+			loader.showModal();
+		}
+	}, 500);
 	await getWord();
+	loadingFinished = true;
+	clearTimeout(loaderTimeout);
+	loader.close();
 	input.focus();
 }
 
@@ -207,14 +216,12 @@ function isMobileDevice() {
 	}
 }
 
-async function loadFromLocalStorage() {
+function loadFromLocalStorage() {
 	const loadedWord = localStorage.getItem('diffle-word');
 	if (loadedWord) {
 		word = loadedWord;
 	} else {
-		loader.showModal();
-		await resetGame();
-		loader.close();
+		resetGame();
 	}
 
 	const loadedInput = localStorage.getItem('diffle-input');
@@ -226,9 +233,7 @@ async function loadFromLocalStorage() {
 			renderWord(word, 0);
 		});
 	} else {
-		loader.showModal();
-		await resetGame();
-		loader.close();
+		resetGame();
 	}
 
 	const loadedTime = localStorage.getItem('diffle-time');
