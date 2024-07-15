@@ -194,17 +194,25 @@ async function resetGame() {
 	input.value = '';
 	output.innerHTML = '';
 	clearClasses();
+	loaderWrapper(loader, getWord);
+	input.focus();
+}
+
+async function loaderWrapper(modalElement, callback, ...args) {
 	let loadingFinished = false;
 	const loaderTimeout = setTimeout(() => {
 		if (!loadingFinished) {
-			loader.showModal();
+			modalElement.showModal();
 		}
 	}, 500);
-	await getWord();
-	loadingFinished = true;
-	clearTimeout(loaderTimeout);
-	loader.close();
-	input.focus();
+	try {
+		const result = await callback(...args);
+		return result;
+	} finally {
+		loadingFinished = true;
+		clearTimeout(loaderTimeout);
+		modalElement.close();
+	}
 }
 
 function isMobileDevice() {
@@ -273,7 +281,7 @@ enterBtn.addEventListener('click', async () => {
 		return;
 	}
 	saveTime(time);
-	const isWordInDict = await checkWord(localInput);
+	const isWordInDict = await loaderWrapper(loader, checkWord, localInput);
 	if (isWordInDict.message) {
 		validate(word);
 		input.focus();
