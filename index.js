@@ -36,7 +36,7 @@ const buttons = [
 ];
 const loader = getElement('loader');
 
-const serverUrl = 'https://diffly-be-bun.onrender.com';
+const serverUrl = 'https://medieval-devora-antmic-0953f11d.koyeb.app';
 const renderTimeout = 300;
 const errorTimeout = 2000;
 
