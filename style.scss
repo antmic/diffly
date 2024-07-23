@@ -169,11 +169,6 @@ body {
 				padding: 10px 20px;
 			}
 
-			.close-btn {
-				background-color: $red;
-				@include key-hover($red);
-			}
-
 			.play-again-btn {
 				background-color: $green;
 				@include key-hover($green);
@@ -244,7 +239,7 @@ body {
 
 		button {
 			padding: 10px 20px;
-			@include key-hover($lightgreen);
+			@include key-hover($pink);
 		}
 
 		.instruction-point {
@@ -297,7 +292,7 @@ body {
 
 		button {
 			@include header-btn-style;
-			@include key-hover($lightgreen);
+			@include key-hover($pink);
 			width: 48px;
 			height: 48px;
 
@@ -448,7 +443,7 @@ body {
 
 			.enter-btn {
 				width: 30%;
-				@include key-hover($lightgreen);
+				@include key-hover($pink);
 				display: flex;
 				justify-content: center;
 				align-items: center;

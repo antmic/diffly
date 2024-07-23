@@ -98,15 +98,6 @@ body .modal .button-wrapper {
 body .modal .button-wrapper button {
   padding: 10px 20px;
 }
-body .modal .button-wrapper .close-btn {
-  background-color: #ffb3ba;
-}
-@media (min-width: 768px) {
-  body .modal .button-wrapper .close-btn:not(:disabled):hover {
-    cursor: pointer;
-    background-color: #ff808c;
-  }
-}
 body .modal .button-wrapper .play-again-btn {
   background-color: #baffc9;
 }
@@ -184,7 +175,7 @@ body .dialog button {
 @media (min-width: 768px) {
   body .dialog button:not(:disabled):hover {
     cursor: pointer;
-    background-color: #a9efb9;
+    background-color: #faa9d8;
   }
 }
 body .dialog .instruction-point {
@@ -247,7 +238,7 @@ body header button.pressed {
 @media (min-width: 768px) {
   body header button:not(:disabled):hover {
     cursor: pointer;
-    background-color: #a9efb9;
+    background-color: #faa9d8;
   }
 }
 body header button img {
@@ -392,7 +383,7 @@ body .input-keyboard-wrapper .input-wrapper .enter-btn {
 @media (min-width: 768px) {
   body .input-keyboard-wrapper .input-wrapper .enter-btn:not(:disabled):hover {
     cursor: pointer;
-    background-color: #a9efb9;
+    background-color: #faa9d8;
   }
 }
 body .input-keyboard-wrapper .input-wrapper .enter-btn img {
